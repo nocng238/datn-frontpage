@@ -14,6 +14,8 @@ import {
   head,
   isEmpty,
 } from "lodash";
+import { twMerge } from "tailwind-merge";
+import clsx, { ClassValue } from "clsx";
 
 export const getFieldValue = (
   field:
@@ -257,3 +259,7 @@ export const findWithRegex = (
   }
   return allMatch ? [] : "";
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}

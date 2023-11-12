@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.Toastify__toast-container--bottom-right {
+  width: auto !important;
+  max-width: 550px !important;
+  min-width: 326px !important;
+  z-index: 10100 !important;
+  padding: 0 !important;
+}
+
+.Toastify__toast-theme--light {
+  background: #222222 !important;
+}
+
+.Toastify__toast {
+  min-height: 44px !important;
+  margin-bottom: 0px !important;
+  box-shadow: 0px 2px 10px rgba(29, 29, 29, 0.12) !important;
+  border-radius: 4px !important;
+  padding: 10px 14px !important;
+}
