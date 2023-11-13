@@ -56,7 +56,7 @@ const MENU = [
 export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   return (
     <div className="h-[calc(100vh)] w-full flex flex-col justify-between max-w-[13rem] py-4 shadow-xl shadow-blue-gray-900/8 bg-white">
       <div>

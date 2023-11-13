@@ -9,7 +9,7 @@ import {
   Rating,
   Typography,
 } from "@material-tailwind/react";
-import { StarIcon } from "@heroicons/react/24/solid";
+import { StarIcon, XCircleIcon } from "@heroicons/react/24/solid";
 interface DoctorCardProps {
   onClick: () => void;
 }
@@ -21,7 +21,7 @@ const DoctorCard = (props: DoctorCardProps) => {
         color="transparent"
         floated={false}
         shadow={false}
-        className=" flex items-center gap-4 pt-0 pb-8"
+        className=" flex items-center gap-4 pt-0 pb-6"
       >
         <Avatar
           size="lg"
@@ -32,7 +32,10 @@ const DoctorCard = (props: DoctorCardProps) => {
         <div className="flex w-full flex-col gap-0.5">
           <div className="flex items-center justify-between">
             <Typography color="blue">Doctor</Typography>
-            <Rating value={4} unratedColor="amber" ratedColor="amber" />
+            <div>
+              <Rating value={4} unratedColor="amber" ratedColor="amber" />
+              <Typography variant="h7"> 4.7 from 100 reviews</Typography>
+            </div>
           </div>
           <Typography variant="h5" color="blue-gray">
             Nguyen Thanh Lai
@@ -40,11 +43,23 @@ const DoctorCard = (props: DoctorCardProps) => {
         </div>
       </CardHeader>
       <CardBody className="mb-3">
-        <Typography>
+        {/* <Typography>
           &quot;I found solution to all my design needs from Creative Tim. I use
           them as a freelancer in my hobby projects for fun! And its really
           affordable, very humble guys !!!&quot;
-        </Typography>
+        </Typography> */}
+        <div className="flex justify-between ">
+          <Typography variant="h6">Address :</Typography>
+          <Typography> 72 Phan Ba Phien</Typography>
+        </div>
+        <div className="flex justify-between">
+          <Typography variant="h6">Phone :</Typography>
+          <Typography> 0935612849</Typography>
+        </div>
+        <div className="flex justify-between">
+          <Typography variant="h6">Workplace :</Typography>
+          <Typography> Petcare center</Typography>
+        </div>
       </CardBody>
       <CardFooter className="pt-3">
         <Button

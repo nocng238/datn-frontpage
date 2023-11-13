@@ -21,7 +21,6 @@ export default function SignUp() {
           <InputDefault
             size="lg"
             placeholder="name@mail.com"
-            className=" !border-blue-gray-200 focus:!border-gray-900"
             labelProps={{
               className: "hidden",
             }}
@@ -32,7 +31,6 @@ export default function SignUp() {
           <InputDefault
             size="lg"
             placeholder="name@mail.com"
-            className=" !border-blue-gray-200 focus:!border-gray-900"
             labelProps={{
               className: "before:content-none after:content-none",
             }}

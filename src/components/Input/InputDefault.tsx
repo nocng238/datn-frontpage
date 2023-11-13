@@ -12,6 +12,7 @@ const InputDefault = (props: InputDefaultProps) => {
     customIcon,
     classCustom,
     styleRootInput,
+    className,
     ...otherProps
   } = props;
   const [typeInput, setTypeInput] = useState(type || "text");
@@ -63,8 +64,18 @@ const InputDefault = (props: InputDefaultProps) => {
     }
     return null;
   };
-
-  return <Input type={type} value={value} color="black" {...otherProps} />;
+  const classNameCustom = otherProps.label
+    ? className
+    : `${className} !border-blue-gray-200 focus:!border-gray-900`;
+  return (
+    <Input
+      type={type}
+      value={value}
+      color="black"
+      {...otherProps}
+      className={classNameCustom}
+    />
+  );
 };
 
 export default InputDefault;
