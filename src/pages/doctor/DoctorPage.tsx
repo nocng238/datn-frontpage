@@ -13,7 +13,9 @@ import {
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import PdfRenderer from "./PdfRender";
+// import samplePdf from "@app/assets/Get_Started_With_Smallpdf.pdf";
 
+import samplePdf from "@app/assets/_ch02 Introduction to Modern Symmetric-key Ciphers.pdf";
 const DoctorPage = () => {
   const openModal = useBoolean();
   const loop = [12, 3, 4, 5, 4];
@@ -84,8 +86,9 @@ const DoctorPage = () => {
           </div> */}
         </DialogHeader>
         <DialogBody>
-          <div className="w-full rounded-lg overflow-auto">
-            <PdfRenderer url="https://www.africau.edu/images/default/sample.pdf" />
+          <div className="w-full flex rounded-lg ">
+            <div className="w-[50%]">this is doctor info</div>
+            <PdfRenderer url={samplePdf} />
           </div>
         </DialogBody>
         <DialogFooter className="justify-between">

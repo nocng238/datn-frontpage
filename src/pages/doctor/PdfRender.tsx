@@ -1,12 +1,9 @@
 import { Document, Page, pdfjs } from "react-pdf";
-// import
-// import pdfWorker from "pdfjs-dist/build/pdf.worker.js?url";
-// import {Document, Page} from 'react-pdf/dist/esm/e';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 // import { useToast } from "./ui/use-toast";
 
-// import { useResizeDetector } from "react-resize-detector";
+import { useResizeDetector } from "react-resize-detector";
 // import { Button } from "./ui/button";
 // import { Input } from './ui/input'
 import { useState } from "react";
@@ -45,8 +42,10 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
   const [renderedScale, setRenderedScale] = useState<number | null>(null);
+  console.log("url : ", url);
 
   const isLoading = renderedScale !== scale;
+  console.log("isLoading: ", isLoading);
 
   //   const CustomPageValidator = z.object({
   //     page: z
@@ -70,8 +69,9 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
 
   //   console.log(errors);
 
-  //   const { width, ref } = useResizeDetector();
-  const width = 0;
+  const { width, ref } = useResizeDetector();
+  // const width = 0;
+  console.log(width);
 
   const handlePageSubmit = ({ page }: any) => {
     setCurrPage(Number(page));
@@ -79,7 +79,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
+    <div className="w-[50%] bg-white rounded-md shadow flex flex-col items-center overflow-auto">
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5">
           <Button
@@ -171,64 +171,56 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
         </div> */}
       </div>
 
-      <div className="flex-1 w-full max-h-screen">
-        <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)]">
-          <div
-          //    ref={ref}
-          >
-            <Document
-              loading={
-                <div className="flex justify-center">
-                  <Spinner className="my-24 h-6 w-6" />
-                  {/* <Loader2 className='my-24 h-6 w-6 animate-spin' /> */}
-                </div>
-              }
-              onLoadError={() => {
-                toast(
-                  <LabelNotification
-                    message="Error loading PDF.Please try again later!"
-                    type="error"
-                  />
-                );
-                // toast({
-                //   title: "Error loading PDF",
-                //   description: "Please try again later",
-                //   variant: "destructive",
-                // });
-              }}
-              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-              file={url}
-              className="max-h-full"
-            >
-              {isLoading && renderedScale ? (
-                <Page
-                  width={width ? width : 1}
-                  pageNumber={currPage}
-                  scale={scale}
-                  //   rotate={rotation}
-                  key={"@" + renderedScale}
+      <div className="flex-1 w-full max-h-[70vh] overflow-auto">
+        {/* <SimpleBar autoHide={false} className="max-h-full"> */}
+        <div ref={ref}>
+          <Document
+            loading={
+              <div className="flex justify-center">
+                <Spinner className="my-24 h-6 w-6" />
+              </div>
+            }
+            onLoadError={() => {
+              toast(
+                <LabelNotification
+                  message="Error loading PDF.Please try again later!"
+                  type="error"
                 />
-              ) : null}
-
+              );
+            }}
+            onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+            file={url}
+            className="max-h-full"
+          >
+            {isLoading && renderedScale ? (
               <Page
-                className={cn(isLoading ? "hidden" : "")}
                 width={width ? width : 1}
                 pageNumber={currPage}
                 scale={scale}
-                // rotate={rotation}
-                key={"@" + scale}
-                loading={
-                  <div className="flex justify-center">
-                    <Spinner className="my-24 h-6 w-6" />
-
-                    {/* <Loader2 className="my-24 h-6 w-6 animate-spin" /> */}
-                  </div>
-                }
-                onRenderSuccess={() => setRenderedScale(scale)}
+                //   rotate={rotation}
+                key={"@" + renderedScale}
               />
-            </Document>
-          </div>
-        </SimpleBar>
+            ) : null}
+
+            <Page
+              className={cn(isLoading ? "hidden" : "")}
+              width={width ? width : 1}
+              pageNumber={currPage}
+              scale={scale}
+              // rotate={rotation}
+              key={"@" + scale + Math.random()}
+              loading={
+                <div className="flex justify-center">
+                  <Spinner className="my-24 h-6 w-6" />
+
+                  {/* <Loader2 className="my-24 h-6 w-6 animate-spin" /> */}
+                </div>
+              }
+              onRenderSuccess={() => setRenderedScale(scale)}
+            />
+          </Document>
+        </div>
+        {/* </SimpleBar> */}
       </div>
     </div>
   );
