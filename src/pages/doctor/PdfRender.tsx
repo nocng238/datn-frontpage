@@ -20,10 +20,22 @@ import { useForm } from "react-hook-form";
 //   DropdownMenuTrigger,
 // } from './ui/dropdown-menu'
 
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  MagnifyingGlassIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/solid";
 import SimpleBar from "simplebar-react";
 import InputDefault from "@app/components/Input/InputDefault";
-import { Spinner, Button } from "@material-tailwind/react";
+import {
+  Spinner,
+  Button,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+} from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { cn } from "@app/helpers/utils";
@@ -43,7 +55,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [scale, setScale] = useState<number>(1);
   const [renderedScale, setRenderedScale] = useState<number | null>(null);
   console.log("url : ", url);
-
+  const [rotation, setRotation] = useState<number>(0);
   const isLoading = renderedScale !== scale;
   console.log("isLoading: ", isLoading);
 
@@ -89,6 +101,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
               setValue("page", String(currPage - 1));
             }}
             variant="gradient"
+            size="sm"
             aria-label="previous page"
           >
             <ChevronDownIcon className="h-4 w-4" />
@@ -97,16 +110,16 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
           <div className="flex items-center gap-1.5">
             <InputDefault
               {...register("page")}
-              className={cn(
-                "w-12 h-8",
-                errors.page && "focus-visible:ring-red-500"
-              )}
+              // className="w-4 min-w-[4px]"
+              size="md"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleSubmit(handlePageSubmit)();
                 }
               }}
+              value={currPage}
             />
+
             <p className="text-zinc-700 text-sm space-x-1">
               <span>/</span>
               <span>{numPages ?? "x"}</span>
@@ -121,6 +134,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
               );
               setValue("page", String(currPage + 1));
             }}
+            size="sm"
             variant="gradient"
             aria-label="next page"
           >
@@ -128,51 +142,64 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
           </Button>
         </div>
 
-        {/* <div className='space-x-2'>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+        <div className="space-x-2">
+          <Menu>
+            <MenuHandler>
               <Button
-                className='gap-1.5'
-                aria-label='zoom'
-                variant='ghost'>
-                <Search className='h-4 w-4' />
-                {scale * 100}%
-                <ChevronDown className='h-3 w-3 opacity-50' />
+                className="gap-1.5"
+                aria-label="zoom"
+                variant="gradient"
+                size="sm"
+              >
+                <div className="flex gap-2 items-center">
+                  <MagnifyingGlassIcon className="h-4 w-4" />
+                  <p>{scale * 100}%</p>
+                  <ChevronDownIcon className="h-3 w-3 opacity-50" />
+                </div>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                onSelect={() => setScale(1)}>
+            </MenuHandler>
+            <MenuList className="z-[10000] ">
+              <MenuItem
+                className="z-[10000] hover:bg-grayWhite"
+                onClick={() => setScale(1)}
+              >
                 100%
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => setScale(1.5)}>
+              </MenuItem>
+              <MenuItem
+                className="z-[10000] hover:bg-grayWhite"
+                onClick={() => {
+                  setScale(1.5);
+                }}
+              >
                 150%
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => setScale(2)}>
+              </MenuItem>
+              <MenuItem
+                className="z-[10000] hover:bg-grayWhite"
+                onClick={() => setScale(2)}
+              >
                 200%
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => setScale(2.5)}>
+              </MenuItem>
+              <MenuItem
+                className="z-[10000] hover:bg-grayWhite"
+                onClick={() => setScale(2.5)}
+              >
                 250%
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </MenuItem>
+            </MenuList>
+          </Menu>
 
           <Button
             onClick={() => setRotation((prev) => prev + 90)}
-            variant='ghost'
-            aria-label='rotate 90 degrees'>
-            <RotateCw className='h-4 w-4' />
+            variant="gradient"
+            aria-label="rotate 90 degrees"
+            size="sm"
+          >
+            <ArrowPathIcon className="h-4 w-4" />
           </Button>
-
-          <PdfFullscreen fileUrl={url} />
-        </div> */}
+        </div>
       </div>
 
       <div className="flex-1 w-full max-h-[70vh] overflow-auto">
-        {/* <SimpleBar autoHide={false} className="max-h-full"> */}
         <div ref={ref}>
           <Document
             loading={
@@ -212,15 +239,12 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
               loading={
                 <div className="flex justify-center">
                   <Spinner className="my-24 h-6 w-6" />
-
-                  {/* <Loader2 className="my-24 h-6 w-6 animate-spin" /> */}
                 </div>
               }
               onRenderSuccess={() => setRenderedScale(scale)}
             />
           </Document>
         </div>
-        {/* </SimpleBar> */}
       </div>
     </div>
   );
