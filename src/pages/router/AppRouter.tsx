@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 // import { setupInterceptors } from "./services/axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { PATH } from "../../constants/path";
 import NotFound from "../error/NotFound";
 import RequireAuth from "./RequireAuth";
@@ -17,6 +17,9 @@ import DoctorPage from "../doctor/DoctorPage";
 // const Error404Page = React.lazy(() => import('@app/pages/'));
 
 export const AppRouter: React.FC = () => {
+  useEffect(() => {
+    localStorage.setItem("access_token", "aasd");
+  }, []);
   const protectedLayout = (
     <RequireAuth>
       <MainLayout />

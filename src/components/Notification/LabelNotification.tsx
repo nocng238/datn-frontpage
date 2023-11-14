@@ -1,7 +1,3 @@
-import React from "react";
-import { Alert, Button } from "@material-tailwind/react";
-import type { AlertProps } from "@material-tailwind/react";
-import { StarIcon, CheckIcon } from "@heroicons/react/24/solid";
 import IconSuccess from "@app/assets/icons/icon-check-success.svg";
 import IconError from "@app/assets/icons/icon-error-notification.svg";
 import IconWarning from "@app/assets/icons/icon-warning-notification.svg";

@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Card,
   CardBody,
   CardFooter,
@@ -22,6 +23,7 @@ import { useString } from "@app/helpers/hooks";
 import ProfileDetail from "./ProfileDetail";
 import Settings from "./Settings";
 import Payments from "./Payments";
+import AvatarUpdateIcon from "@app/assets/icons/icon-update-avatar.svg";
 const Profile = () => {
   const tab = useString(PROFILE_TAB.INFO);
   const data = [
@@ -61,14 +63,33 @@ const Profile = () => {
     return <Payments />;
   };
   return (
-    <div className="flex p-6 gap-6">
+    <div className="flex p-6 gap-6 max-h-[calc(100vh)]">
       {/* left side */}
-      <Card className="w-96">
-        <CardHeader floated={false} className="h-80">
-          <img
+      <Card className="w-96 h-full">
+        <CardHeader floated={false} className="">
+          <Avatar
             src="https://docs.material-tailwind.com/img/team-3.jpg"
-            alt="profile-picture"
+            className="w-full h-full"
           />
+          <input
+            id="container-update-avatar"
+            // onChange={fileSelectedHandler}
+            accept={"image/*"}
+            type="file"
+            style={{ display: "none" }}
+            // key={keyInputFile.value || ""}
+          />
+          <label htmlFor="container-update-avatar">
+            <div
+              className="absolute cursor-pointer"
+              style={{
+                right: 10,
+                bottom: 10,
+              }}
+            >
+              <img src={AvatarUpdateIcon} className="w-10 h-10" />
+            </div>
+          </label>
         </CardHeader>
         <CardBody className="text-center">
           <Typography variant="h4" color="blue-gray" className="mb-2">

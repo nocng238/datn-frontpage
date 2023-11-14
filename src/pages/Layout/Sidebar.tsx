@@ -57,6 +57,10 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const onLogout = () => {
+    localStorage.clear();
+    navigate("/landing");
+  };
   return (
     <div className="h-[calc(100vh)] w-full flex flex-col justify-between max-w-[13rem] py-4 shadow-xl shadow-blue-gray-900/8 bg-white">
       <div>
@@ -65,7 +69,9 @@ export default function Sidebar() {
             src={Logo}
             alt=""
             className="w-24 h-24 rounded object-cover cursor-pointer"
-            onClick={() => {}}
+            onClick={() => {
+              navigate("/");
+            }}
           />
         </div>
         <hr className="my-2 border-blue-gray-50" />
@@ -74,6 +80,7 @@ export default function Sidebar() {
         {MENU.map((item) => {
           return (
             <ListItem
+              key={item.title}
               className={`
               ${
                 location.pathname.startsWith(item.path)
@@ -93,7 +100,7 @@ export default function Sidebar() {
       </List>
 
       <List className="min-w-[1rem]">
-        <ListItem className="hover:bg-gray-04">
+        <ListItem className="hover:bg-gray-04" onClick={onLogout}>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>

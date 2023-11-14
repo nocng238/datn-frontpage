@@ -33,8 +33,18 @@ const DoctorCard = (props: DoctorCardProps) => {
           <div className="flex items-center justify-between">
             <Typography color="blue">Doctor</Typography>
             <div>
-              <Rating value={4} unratedColor="amber" ratedColor="amber" />
-              <Typography variant="h7"> 4.7 from 100 reviews</Typography>
+              <Rating
+                value={4}
+                unratedColor="amber"
+                ratedColor="amber"
+                readonly
+              />
+              <Typography
+                color="blue-gray"
+                className="font-medium text-blue-gray-500"
+              >
+                Based on 134 Reviews
+              </Typography>
             </div>
           </div>
           <Typography variant="h5" color="blue-gray">
@@ -43,11 +53,6 @@ const DoctorCard = (props: DoctorCardProps) => {
         </div>
       </CardHeader>
       <CardBody className="mb-3">
-        {/* <Typography>
-          &quot;I found solution to all my design needs from Creative Tim. I use
-          them as a freelancer in my hobby projects for fun! And its really
-          affordable, very humble guys !!!&quot;
-        </Typography> */}
         <div className="flex justify-between ">
           <Typography variant="h6">Address :</Typography>
           <Typography> 72 Phan Ba Phien</Typography>
