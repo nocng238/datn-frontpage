@@ -16,7 +16,7 @@ interface DoctorCardProps {
 const DoctorCard = (props: DoctorCardProps) => {
   const { onClick } = props;
   return (
-    <Card color="white" shadow={false} className="w-full max-w-[26rem]">
+    <Card color="white" shadow={false} className="w-full max-w-[26rem] border">
       <CardHeader
         color="transparent"
         floated={false}

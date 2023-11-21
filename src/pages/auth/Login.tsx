@@ -114,7 +114,7 @@ export default function Login() {
             // as="a"
             // href="#signup"
             onClick={() => {
-              navigate("/sign-up");
+              navigate("/auth/sign-up");
             }}
             variant="small"
             color="blue-gray"

@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { InputDefaultProps, STATUS_INPUT } from "./types";
 import { Input } from "@material-tailwind/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { isUndefined } from "lodash";
+import { isValidEmail, validationPassword } from "@app/helpers/utils";
 const InputDefault = (props: InputDefaultProps) => {
   const {
-    status,
-    labelStatus,
     type,
     value,
     isPassword,
@@ -16,7 +16,7 @@ const InputDefault = (props: InputDefaultProps) => {
     ...otherProps
   } = props;
   const [typeInput, setTypeInput] = useState(type || "text");
-  const [showIcon, setShowIcon] = useState(false);
+  const [showIcon, setShowIcon] = useState(type === "password" ? true : false);
 
   //   React.useEffect(() => {
   //     if (!type) {
@@ -39,8 +39,6 @@ const InputDefault = (props: InputDefaultProps) => {
   //   } text-sm font-normal text-black focus:outline-none ${renderStatus()}`;
 
   const handleOnFocus = () => {
-    console.log("dasd");
-
     setShowIcon(true);
   };
 
@@ -49,31 +47,65 @@ const InputDefault = (props: InputDefaultProps) => {
   };
 
   const renderIcon = () => {
+    if (otherProps.disabled) {
+      return null;
+    }
     if (showIcon) {
-      return type === "password" ? (
+      return typeInput === "password" ? (
         <EyeIcon
-          className="cursor-pointer !absolute right-2 top-3 h-5 w-5"
+          className="cursor-pointer !absolute h-5 w-5"
           onClick={handleChangeTypeIcon}
         />
       ) : (
         <EyeSlashIcon
-          className="cursor-pointer !absolute right-1 top-[50%] h-5 w-5"
+          className="cursor-pointer !absolute h-5 w-5"
           onClick={handleChangeTypeIcon}
         />
       );
     }
     return null;
   };
+  const isError = () => {
+    if (type === "email") {
+      const isValid = isValidEmail(value as string);
+      if (isUndefined(isValid)) return undefined;
+      else return !isValid;
+    }
+    if (type === "password") {
+      const isValid = validationPassword(value as string);
+      if (typeof isValid === "boolean") return !isValid;
+    }
+    return undefined;
+  };
+  const isSuccess = () => {
+    if (type === "email") {
+      const isValid = isValidEmail(value as string);
+      if (typeof isValid === "boolean") return isValid;
+    }
+    if (type === "password") {
+      const isValid = validationPassword(value as string);
+      if (typeof isValid === "boolean") return isValid;
+    }
+    return undefined;
+  };
   const classNameCustom = otherProps.label
     ? className
+    : isSuccess()
+    ? `${className} !border-green-200 focus:!border-green-900`
+    : isError()
+    ? `${className} !border-red-200 focus:!border-red-900`
     : `${className} !border-blue-gray-200 focus:!border-gray-900`;
   return (
     <Input
-      type={type}
+      type={typeInput}
       value={value}
       color="black"
       {...otherProps}
       className={classNameCustom}
+      labelProps={{
+        className: otherProps.label ? "" : "hidden",
+      }}
+      icon={renderIcon()}
     />
   );
 };

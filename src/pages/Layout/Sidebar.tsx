@@ -15,12 +15,14 @@ import {
   Cog6ToothIcon,
   InboxIcon,
   PowerIcon,
+  CalendarDaysIcon,
 } from "@heroicons/react/24/solid";
 import DoctorIcon from "@app/assets/icons/icon-doctor.svg";
 import Logo from "@app/assets/images/logo.jpg";
 import { PATH } from "@app/constants/path";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { avatar } from "@app/constants/data";
+import CustomIcon from "@app/components/CustomIcon/CustomIcon";
 const MENU = [
   {
     title: "Dashboard",
@@ -28,8 +30,8 @@ const MENU = [
     icon: <PresentationChartBarIcon className="h-5 w-5" />,
   },
   {
-    title: "E-Commerce",
-    path: "ecom",
+    title: "Schedule",
+    path: "/schedule",
     icon: <ShoppingBagIcon className="h-5 w-5" />,
   },
   {
@@ -40,7 +42,12 @@ const MENU = [
   {
     title: "Doctor",
     path: "/doctor",
-    icon: <img src={DoctorIcon} className="h-5 w-5" />,
+    icon: <CustomIcon src={DoctorIcon} />,
+  },
+  {
+    title: "Appoinment",
+    path: "/appointment",
+    icon: <CalendarDaysIcon className="h-5 w-5" />,
   },
   {
     title: "Profile",
@@ -59,7 +66,7 @@ export default function Sidebar() {
 
   const onLogout = () => {
     localStorage.clear();
-    navigate("/landing");
+    navigate("/auth/login");
   };
   return (
     <div className="h-[calc(100vh)] w-full flex flex-col justify-between max-w-[13rem] py-4 shadow-xl shadow-blue-gray-900/8 bg-white">

@@ -31,26 +31,16 @@ const Profile = () => {
       label: "Personal Info",
       value: "info",
       icon: <UserCircleIcon className="w-8 h-8" />,
-      desc: `It really matters and then like it really doesn't matter.
-      What matters is the people who are sparked by it. And the people
-      who are like offended by it, it doesn't matter.`,
     },
     {
       label: "Security Settings",
       value: "setting",
       icon: <Cog6ToothIcon className="w-8 h-8" />,
-
-      desc: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,
     },
     {
       label: "Payments",
       value: "payments",
       icon: <CurrencyDollarIcon className="w-8 h-8" />,
-
-      desc: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,
     },
   ];
   const renderTabContent = () => {
@@ -60,10 +50,10 @@ const Profile = () => {
     if (tab.value === PROFILE_TAB.SETTING) {
       return <Settings />;
     }
-    return <Payments />;
+    // return <Payments />;
   };
   return (
-    <div className="flex p-6 gap-6 max-h-[calc(100vh)]">
+    <div className="flex gap-6 max-h-[calc(100vh)]">
       {/* left side */}
       <Card className="w-96 h-full">
         <CardHeader floated={false} className="">

@@ -10,7 +10,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import IconCheckSuccess from "@app/assets/icons/icon-check-success.svg";
-
+import { registerLicense } from "@syncfusion/ej2-base";
+registerLicense(
+  "Ngo9BigBOggjHTQxAR8/V1NHaF5cXmVCf1FpRGtGfV5yd0VPalhXTndWUj0eQnxTdEZiWH5WcnVRQGJcUUd0WQ=="
+);
 const CloseButton = ({ closeToast }) => (
   <XCircleIcon onClick={closeToast} className="h-5 w-5 mt-2" />
 );

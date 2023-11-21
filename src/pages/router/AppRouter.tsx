@@ -12,6 +12,8 @@ import ForgotPassword from "../auth/ForgotPassword";
 import MainLayout from "../Layout/MainLayout";
 import Profile from "../Profile/Profile";
 import DoctorPage from "../doctor/DoctorPage";
+import Appointment from "../appointment/Appoinment";
+import Schedule from "../Schedule/Schedule";
 
 // setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
@@ -37,6 +39,8 @@ export const AppRouter: React.FC = () => {
         <Route path="/" element={protectedLayout}>
           <Route path={PATH.profile} element={<Profile />} />
           <Route path={PATH.doctor} element={<DoctorPage />} />
+          <Route path={PATH.appointment} element={<Appointment />} />
+          <Route path={"/schedule"} element={<Schedule />} />
         </Route>
         <Route path={"*"} element={<NotFound />} />
       </Routes>

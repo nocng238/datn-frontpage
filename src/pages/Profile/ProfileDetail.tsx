@@ -15,17 +15,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const ProfileDetail = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, getValues } = useForm();
   const [data, setData] = useState<string>("");
-  console.log(register("name"));
-
+  const onSubmit = async (data: any) => {
+    // setName(data.name);
+    console.log(data);
+  };
+  //use custom state, dont have to use react hook form
   return (
-    <form
-      action=""
-      onSubmit={handleSubmit((data) => {
-        console.log(data);
-      })}
-    >
+    <form action="" onSubmit={handleSubmit(onSubmit)}>
       <Card className="max-w-full">
         <CardBody className="flex flex-col gap-3">
           <Typography variant="h5" color="blue-gray" className="mb-4">
@@ -36,7 +34,7 @@ const ProfileDetail = () => {
               <Typography variant="h6" className="mb-2 text-blue">
                 Full name
               </Typography>
-              <InputDefault {...(register("fullname"), { required: true })} />
+              <InputDefault />
             </div>
           </div>
           <div className="flex items-center justify-between gap-5">
@@ -44,10 +42,7 @@ const ProfileDetail = () => {
               <Typography variant="h6" className="mb-2 text-blue ">
                 Work place
               </Typography>
-              <InputDefault
-                {...(register("workplace"), { required: true })}
-                className="w"
-              />
+              <InputDefault {...(register("workplace"), { required: true })} />
             </div>
             <div>
               <Typography variant="h6" className="mb-2 text-blue">
@@ -73,7 +68,7 @@ const ProfileDetail = () => {
               </Typography>
               <InputDefault
                 className=""
-                {...(register("phone"), { required: true })}
+                // {...(register("phone"), { required: true })}
               />
             </div>
             <div className="w-full">
@@ -127,10 +122,6 @@ const ProfileDetail = () => {
           </Button>
         </CardFooter>
       </Card>
-      {/* <InputDefault {...register("name")} /> */}
-      {/* <Input {...register("name")} />
-      <input type="text" {...register("ba")} />
-      <Button type="submit">save</Button> */}
     </form>
   );
 };

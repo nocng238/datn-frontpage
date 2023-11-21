@@ -11,7 +11,7 @@ const MainLayout = () => {
         {/* <div className="border-b border-[#E4E4E4]">this is header</div> */}
 
         {/* main content */}
-        <div className="overflow-auto max-h-screen ">
+        <div className="overflow-auto max-h-screen p-6">
           <Outlet />
         </div>
       </div>

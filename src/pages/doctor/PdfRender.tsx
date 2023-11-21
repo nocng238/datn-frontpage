@@ -9,16 +9,6 @@ import { useResizeDetector } from "react-resize-detector";
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";
-// import { z } from "zod";
-
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { cn } from "@/lib/utils";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuTrigger,
-// } from './ui/dropdown-menu'
 
 import {
   ChevronDownIcon,
@@ -54,10 +44,8 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
   const [renderedScale, setRenderedScale] = useState<number | null>(null);
-  console.log("url : ", url);
   const [rotation, setRotation] = useState<number>(0);
   const isLoading = renderedScale !== scale;
-  console.log("isLoading: ", isLoading);
 
   //   const CustomPageValidator = z.object({
   //     page: z
@@ -224,7 +212,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                 width={width ? width : 1}
                 pageNumber={currPage}
                 scale={scale}
-                //   rotate={rotation}
+                rotate={rotation}
                 key={"@" + renderedScale}
               />
             ) : null}
@@ -234,7 +222,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
               width={width ? width : 1}
               pageNumber={currPage}
               scale={scale}
-              // rotate={rotation}
+              rotate={rotation}
               key={"@" + scale + Math.random()}
               loading={
                 <div className="flex justify-center">
