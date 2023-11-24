@@ -86,6 +86,11 @@ export const isValidPhone = (phone: string): boolean | undefined => {
   if (isEmpty(phone)) return undefined;
   return isMobilePhone(phone);
 };
+export const regexVietNamesePhoneNumber = (phone: string) => {
+  const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+
+  return phone.match(regexPhoneNumber) ? true : false;
+};
 
 export const getFirstLetterInName = (name: string, justOne = false) => {
   if (!name) {

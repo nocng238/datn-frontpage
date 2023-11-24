@@ -14,14 +14,16 @@ import Profile from "../Profile/Profile";
 import DoctorPage from "../doctor/DoctorPage";
 import Appointment from "../appointment/Appoinment";
 import Schedule from "../Schedule/Schedule";
+import ConfirmEmail from "../auth/ConfirmEmail";
+import { setupInterceptors } from "@app/services/axios";
 
-// setupInterceptors();
+setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
 
 export const AppRouter: React.FC = () => {
-  useEffect(() => {
-    localStorage.setItem("access_token", "aasd");
-  }, []);
+  // useEffect(() => {
+  //   localStorage.setItem("access_token", "aasd");
+  // }, []);
   const protectedLayout = (
     <RequireAuth>
       <MainLayout />
@@ -35,14 +37,15 @@ export const AppRouter: React.FC = () => {
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<SignUp />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="confirm-email" element={<ConfirmEmail />} />
         </Route>
-        <Route path="/" element={protectedLayout}>
-          <Route path={PATH.profile} element={<Profile />} />
+        <Route path={"error/404"} element={<NotFound />} />
+
+        <Route path="/*" element={protectedLayout} />
+        {/* <Route path={PATH.profile} element={<Profile />} />
           <Route path={PATH.doctor} element={<DoctorPage />} />
           <Route path={PATH.appointment} element={<Appointment />} />
-          <Route path={"/schedule"} element={<Schedule />} />
-        </Route>
-        <Route path={"*"} element={<NotFound />} />
+          <Route path={"/schedule"} element={<Schedule />} /> */}
       </Routes>
     </BrowserRouter>
   );

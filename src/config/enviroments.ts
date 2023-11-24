@@ -6,4 +6,6 @@ export const isLogin = () => {
   return true;
 };
 
-// export const API_URL = process.env.REACT_APP_API_URL || "";
+export const API_URL =
+  import.meta.env.REACT_APP_API_URL || "http://localhost:3000";
+export const VIETNAM_PROVINCES_API = "https://provinces.open-api.vn/api/";

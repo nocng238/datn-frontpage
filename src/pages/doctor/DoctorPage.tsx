@@ -13,9 +13,9 @@ import {
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import PdfRenderer from "./PdfRender";
-// import samplePdf from "@app/assets/Get_Started_With_Smallpdf.pdf";
+import samplePdf from "@app/assets/Get_Started_With_Smallpdf.pdf";
 
-import samplePdf from "@app/assets/_ch02 Introduction to Modern Symmetric-key Ciphers.pdf";
+// import samplePdf from "@app/assets/_ch02 Introduction to Modern Symmetric-key Ciphers.pdf";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import InputDefault from "@app/components/Input/InputDefault";
 import SearchInput from "@app/components/Input/SearchInput";
@@ -26,7 +26,7 @@ const DoctorPage = () => {
   const onRemoveSearch = () => {
     search.setValue("");
   };
-  const onChangeSearchInput = (e) => {
+  const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     search.setValue(e.target.value);
   };
   return (

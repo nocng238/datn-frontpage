@@ -16,7 +16,11 @@ interface DoctorCardProps {
 const DoctorCard = (props: DoctorCardProps) => {
   const { onClick } = props;
   return (
-    <Card color="white" shadow={false} className="w-full max-w-[26rem] border">
+    <Card
+      color="white"
+      shadow={false}
+      className="w-full max-w-[26rem] border hover:border-blue-gray-200 hover:shadow-lg"
+    >
       <CardHeader
         color="transparent"
         floated={false}
@@ -64,6 +68,10 @@ const DoctorCard = (props: DoctorCardProps) => {
         <div className="flex justify-between">
           <Typography variant="h6">Workplace :</Typography>
           <Typography> Petcare center</Typography>
+        </div>
+        <div className="flex justify-between">
+          <Typography variant="h6">Fee per hour :</Typography>
+          <Typography>15$</Typography>
         </div>
       </CardBody>
       <CardFooter className="pt-3">

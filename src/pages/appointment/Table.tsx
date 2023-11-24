@@ -2,10 +2,15 @@ import CustomIcon from "@app/components/CustomIcon/CustomIcon";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
   CalendarDaysIcon,
+  CreditCardIcon,
   PencilIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 import NoteIcon from "@app/assets/icons/icon-note.svg";
+import CancelAppointmentIcon from "@app/assets/icons/icon-cancel-appointment.svg";
+import PaypalIcon from "@app/assets/icons/icon-paypal.svg";
+import CodIcon from "@app/assets/icons/cod-icon.svg";
+
 import {
   Card,
   CardHeader,
@@ -28,6 +33,9 @@ import {
 } from "@material-tailwind/react";
 import { useBoolean } from "@app/helpers/hooks";
 import CreateAppointmentProcess from "./CreateAppointmentProcess";
+import InputDefault from "@app/components/Input/InputDefault";
+import PaymentStatusLable from "@app/components/StatusLable/PaymentStatus";
+import AppointmentStatus from "@app/components/StatusLable/AppointmentStatus";
 
 const TABS = [
   {
@@ -44,7 +52,15 @@ const TABS = [
   },
 ];
 
-const TABLE_HEAD = ["Doctor", "Function", "Status", "Date", ""];
+const TABLE_HEAD = [
+  "Doctor",
+  "Address",
+  "Status",
+  "Payment Status",
+  "Payment",
+  "Date",
+  "",
+];
 
 const TABLE_ROWS = [
   {
@@ -53,8 +69,9 @@ const TABLE_ROWS = [
     email: "john@creative-tim.com",
     job: "Manager",
     org: "Organization",
-    online: true,
+    status: "pending",
     date: "23/04/18",
+    account: "visa",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -62,7 +79,10 @@ const TABLE_ROWS = [
     email: "alexa@creative-tim.com",
     job: "Programator",
     org: "Developer",
-    online: false,
+    status: false,
+    account: "visa",
+    // paymentsStatus: false,
+
     date: "23/04/18",
   },
   {
@@ -71,8 +91,9 @@ const TABLE_ROWS = [
     email: "laurent@creative-tim.com",
     job: "Executive",
     org: "Projects",
-    online: false,
+    status: false,
     date: "19/09/17",
+    account: "cod",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
@@ -80,8 +101,9 @@ const TABLE_ROWS = [
     email: "michael@creative-tim.com",
     job: "Programator",
     org: "Developer",
-    online: true,
+    status: true,
     date: "24/12/08",
+    account: "creditcard",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
@@ -89,8 +111,9 @@ const TABLE_ROWS = [
     email: "richard@creative-tim.com",
     job: "Manager",
     org: "Executive",
-    online: false,
+    status: false,
     date: "04/10/21",
+    account: "visa",
   },
 ];
 
@@ -152,7 +175,7 @@ export default function MembersTable() {
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="w-full md:w-72">
-            <Input
+            <InputDefault
               label="Search"
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
             />
@@ -181,7 +204,10 @@ export default function MembersTable() {
           </thead>
           <tbody>
             {TABLE_ROWS.map(
-              ({ img, name, email, job, org, online, date }, index) => {
+              (
+                { img, name, email, job, org, status, date, account },
+                index
+              ) => {
                 const isLast = index === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -230,12 +256,34 @@ export default function MembersTable() {
                     </td>
                     <td className={classes}>
                       <div className="w-max">
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          value={online ? "online" : "offline"}
-                          color={online ? "green" : "blue-gray"}
-                        />
+                        <AppointmentStatus status="pending" />
+                      </div>
+                    </td>
+                    <td className={classes}>
+                      <div className="w-max">
+                        <PaymentStatusLable status="paid" />
+                      </div>
+                    </td>
+                    <td className={classes}>
+                      <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
+                        {account === "visa" ? (
+                          <CreditCardIcon
+                            // size="sm"
+                            // alt={account}
+                            // variant="square"
+                            className="h-full w-full object-contain p-1"
+                          />
+                        ) : account === "creditcard" ? (
+                          <CustomIcon
+                            src={PaypalIcon}
+                            className="h-full w-full object-contain p-1"
+                          />
+                        ) : (
+                          <CustomIcon
+                            src={CodIcon}
+                            className="h-full w-full object-contain p-1"
+                          />
+                        )}
                       </div>
                     </td>
                     <td className={classes}>
@@ -248,14 +296,28 @@ export default function MembersTable() {
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <Tooltip content="Edit User">
+                      {/* <Tooltip content="Edit User">
                         <IconButton variant="text">
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip> */}
                       <Tooltip content="Doctor note">
                         <IconButton variant="text">
                           <CustomIcon src={NoteIcon} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip content="Cancel appointment">
+                        <IconButton
+                          variant="text"
+                          disabled
+                          onClick={() => {
+                            console.log("hi");
+                          }}
+                        >
+                          <CustomIcon
+                            src={CancelAppointmentIcon}
+                            className="w-4 h-4"
+                          />
                         </IconButton>
                       </Tooltip>
                     </td>

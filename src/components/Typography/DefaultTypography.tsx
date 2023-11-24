@@ -4,7 +4,7 @@ export interface TypographyProps
   extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   textClass?: string;
-  textColor?:
+  color?:
     | "navy"
     | "orange"
     | "white"
@@ -18,10 +18,10 @@ export interface TypographyProps
 }
 
 const DefaultTypography = (props: TypographyProps) => {
-  const { variant, textClass, textColor, children, ...otherProps } = props;
+  const { variant, textClass, color, children, ...otherProps } = props;
 
   const renderClassTextColor = () => {
-    switch (textColor) {
+    switch (color) {
       case "navy":
         return "text-navy";
       case "orange":

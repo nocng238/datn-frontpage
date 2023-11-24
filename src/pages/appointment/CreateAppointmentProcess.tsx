@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Stepper, Step, Button, Typography } from "@material-tailwind/react";
 import {
-  CogIcon,
-  UserIcon,
-  BuildingLibraryIcon,
-  CreditCardIcon,
-  CalendarDaysIcon,
-} from "@heroicons/react/24/outline";
+  Stepper,
+  Step,
+  Button,
+  Typography,
+  Textarea,
+} from "@material-tailwind/react";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import CustomIcon from "@app/components/CustomIcon/CustomIcon";
 import DoctorIcon from "@app/assets/icons/icon-doctor.svg";
 import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import DoctorCard from "../doctor/DoctorCard";
+import NoteIcon from "@app/assets/icons/icon-note.svg";
 import Payments from "../Profile/Payments";
 export default function CreateAppointmentProcess() {
   const [activeStep, setActiveStep] = useState(0);
@@ -22,13 +23,16 @@ export default function CreateAppointmentProcess() {
   const loop = [12, 3, 4, 5, 4, 2, 2, 3, 11, 2323232, 1, 1, 1, 1];
   const [selectedDoctor, setSelectedDoctor] = useState<any>();
   const today = new Date();
+  today.setHours(today.getHours() + 5);
+  today.setMinutes(0);
+  today.setSeconds(0);
+
   const renderStepContent = () => {
     if (activeStep === 0) {
       return (
         <div className="flex items-center justify-around md:mt-5">
           <div className="w-96 ">
             <DateTimePickerComponent
-              disabled={true}
               value={dateTime}
               min={today}
               onChange={(e) => {
@@ -58,8 +62,10 @@ export default function CreateAppointmentProcess() {
     }
     if (activeStep === 2) {
       return (
-        <div className="flex items-center justify-around pr-6">
-          <Payments />
+        <div className="flex items-center justify-around">
+          <div className="flex items-center justify-around pr-6 w-[32rem]">
+            <Textarea color="blue-gray" label="Description" rows={8} />
+          </div>
         </div>
       );
     }
@@ -106,7 +112,7 @@ export default function CreateAppointmentProcess() {
           </div>
         </Step>
         <Step onClick={() => setActiveStep(2)}>
-          <CreditCardIcon className="h-5 w-5" />
+          <CustomIcon src={NoteIcon} className="h-5 w-5" />
           <div className="absolute -bottom-[4.5rem] w-max text-center">
             <Typography
               variant="h6"
@@ -116,9 +122,9 @@ export default function CreateAppointmentProcess() {
             </Typography>
             <Typography
               color={activeStep === 2 ? "blue-gray" : "gray"}
-              className="font-normal"
+              className="font-normal overflow-hidden w-full"
             >
-              Select your payment
+              Provide doctor about your pet issue
             </Typography>
           </div>
         </Step>

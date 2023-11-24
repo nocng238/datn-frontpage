@@ -3,7 +3,12 @@ import { InputDefaultProps, STATUS_INPUT } from "./types";
 import { Input } from "@material-tailwind/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { isUndefined } from "lodash";
-import { isValidEmail, validationPassword } from "@app/helpers/utils";
+import {
+  isValidEmail,
+  isValidPhone,
+  regexVietNamesePhoneNumber,
+  validationPassword,
+} from "@app/helpers/utils";
 const InputDefault = (props: InputDefaultProps) => {
   const {
     type,
@@ -75,6 +80,10 @@ const InputDefault = (props: InputDefaultProps) => {
       const isValid = validationPassword(value as string);
       if (typeof isValid === "boolean") return !isValid;
     }
+    if (type === "phone") {
+      const isValid = regexVietNamesePhoneNumber(value as string);
+      if (typeof isValid === "boolean") return !isValid;
+    }
     return undefined;
   };
   const isSuccess = () => {
@@ -84,6 +93,10 @@ const InputDefault = (props: InputDefaultProps) => {
     }
     if (type === "password") {
       const isValid = validationPassword(value as string);
+      if (typeof isValid === "boolean") return isValid;
+    }
+    if (type === "phone") {
+      const isValid = regexVietNamesePhoneNumber(value as string);
       if (typeof isValid === "boolean") return isValid;
     }
     return undefined;
@@ -105,7 +118,7 @@ const InputDefault = (props: InputDefaultProps) => {
       labelProps={{
         className: otherProps.label ? "" : "hidden",
       }}
-      icon={renderIcon()}
+      icon={otherProps.icon || renderIcon()}
     />
   );
 };

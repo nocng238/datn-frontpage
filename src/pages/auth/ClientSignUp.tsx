@@ -6,6 +6,9 @@ import { useState } from "react";
 import { ClientRequest, defaultUser } from "./types";
 import { useForm } from "react-hook-form";
 import PasswordHelperTooltip from "@app/components/Tooltip/PasswordHelperTooltip";
+import { clientSignUpMiddleware } from "./services/api";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
 
 export default function ClientSignUp() {
   const navigate = useNavigate();
@@ -13,7 +16,22 @@ export default function ClientSignUp() {
     useState<ClientRequest>(defaultUser);
   const handleSubbmit = (e) => {
     e.preventDefault();
-    console.log(e);
+    clientSignUpMiddleware(clientRequest)
+      .then((res) => {
+        navigate("/auth/confirm-email", {
+          state: {
+            email: clientRequest.email,
+          },
+        });
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || "failed sign up"}
+          />
+        );
+      });
   };
   return (
     <Card shadow={false} className="p-4 bg-opacity-70" key={"ClientSignUp"}>

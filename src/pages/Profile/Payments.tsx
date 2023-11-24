@@ -21,6 +21,7 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/solid";
 import { formatCardNumber, formatExpires } from "@app/helpers/utils";
+import InputDefault from "@app/components/Input/InputDefault";
 
 export default function Payments() {
   const { countries } = useCountries();
@@ -87,7 +88,7 @@ export default function Payments() {
                   >
                     Your Email
                   </Typography>
-                  <Input
+                  <InputDefault
                     type="email"
                     placeholder="name@mail.com"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -106,7 +107,7 @@ export default function Payments() {
                     Card Details
                   </Typography>
 
-                  <Input
+                  <InputDefault
                     maxLength={19}
                     value={formatCardNumber(cardNumber)}
                     onChange={(event) => setCardNumber(event.target.value)}
@@ -128,7 +129,7 @@ export default function Payments() {
                       >
                         Expires
                       </Typography>
-                      <Input
+                      <InputDefault
                         maxLength={5}
                         value={formatExpires(cardExpires)}
                         onChange={(event) => setCardExpires(event.target.value)}
@@ -148,7 +149,7 @@ export default function Payments() {
                       >
                         CVC
                       </Typography>
-                      <Input
+                      <InputDefault
                         maxLength={4}
                         containerProps={{ className: "min-w-[72px]" }}
                         placeholder="000"
@@ -166,7 +167,7 @@ export default function Payments() {
                   >
                     Holder Name
                   </Typography>
-                  <Input
+                  <InputDefault
                     placeholder="name@mail.com"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{

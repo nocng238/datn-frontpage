@@ -22,7 +22,7 @@ export default function SignUp() {
 
   return (
     <Tabs value={type} className="overflow-visible" key={"payment"}>
-      <TabsHeader className="relative z-0 bg-transparent w-full">
+      <TabsHeader className="relative z-0 w-full px-4">
         <Tab value="client" onClick={() => setType("client")}>
           <div className="flex gap-2 py-[2px] items-center">
             <UserCircleIcon className="w-5 h-5" />
