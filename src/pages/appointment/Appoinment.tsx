@@ -1,6 +1,13 @@
-import Table from "./Table";
+import { useAppSelector } from "@app/hooks/useApp";
+import ClientAppointmentTable from "./ClientAppointmentTable";
+import DoctorAppointmentTable from "./DoctorAppointmentTable";
 
 const Appointment = () => {
-  return <Table />;
+  const user = useAppSelector((state) => state.userInfo);
+  return user.isDoctor ? (
+    <DoctorAppointmentTable />
+  ) : (
+    <ClientAppointmentTable />
+  );
 };
 export default Appointment;

@@ -62,6 +62,7 @@ export default function Login() {
     loginMiddleware(info)
       .then((res) => {
         localStorage.setItem("access_token", res.accessToken);
+        localStorage.setItem("timezone", "+0700");
         navigate("/profile");
       })
       .catch((error) => {

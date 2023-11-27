@@ -1,75 +1,38 @@
 import {
-  Card,
   Typography,
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
   Avatar,
 } from "@material-tailwind/react";
-import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
-  CalendarDaysIcon,
-} from "@heroicons/react/24/solid";
+import { PowerIcon } from "@heroicons/react/24/solid";
 import DoctorIcon from "@app/assets/icons/icon-doctor.svg";
 import Logo from "@app/assets/images/logo.jpg";
 import { PATH } from "@app/constants/path";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { avatar } from "@app/constants/data";
-import CustomIcon from "@app/components/CustomIcon/CustomIcon";
-const MENU = [
-  {
-    title: "Dashboard",
-    path: "dashboard",
-    icon: <PresentationChartBarIcon className="h-5 w-5" />,
-  },
-  {
-    title: "Schedule",
-    path: "/schedule",
-    icon: <ShoppingBagIcon className="h-5 w-5" />,
-  },
-  {
-    title: "Inbox",
-    path: "/inbox",
-    icon: <InboxIcon className="h-5 w-5" />,
-  },
-  {
-    title: "Doctor",
-    path: "/doctor",
-    icon: <CustomIcon src={DoctorIcon} />,
-  },
-  {
-    title: "Appoinment",
-    path: "/appointment",
-    icon: <CalendarDaysIcon className="h-5 w-5" />,
-  },
-  {
-    title: "Profile",
-    path: PATH.profile,
-    icon: <UserCircleIcon className="h-5 w-5" />,
-  },
-  {
-    title: "Settings",
-    path: "/settings",
-    icon: <Cog6ToothIcon className="h-5 w-5" />,
-  },
+import { MENU } from "./constant/sidebarConstant";
+import { useAppSelector } from "@app/hooks/useApp";
+const CLIENT_MENU = [MENU.APPOINMENT, MENU.DOCTOR, MENU.PROFILE, MENU.SETTING];
+const DOCTOR_MENU = [
+  MENU.DASHBOARD,
+  MENU.SCHEDULE,
+  MENU.APPOINMENT,
+  MENU.INBOX,
+  MENU.PROFILE,
+  MENU.SETTING,
 ];
 export default function Sidebar() {
+  const user = useAppSelector((state) => state.userInfo);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const USER_MENU = user.id ? (user?.isDoctor ? DOCTOR_MENU : CLIENT_MENU) : [];
   const onLogout = () => {
     localStorage.clear();
     navigate("/auth/login");
   };
   return (
-    <div className="h-[calc(100vh)] w-full flex flex-col justify-between max-w-[13rem] py-4 shadow-xl shadow-blue-gray-900/8 bg-white">
+    <div className="h-[calc(100vh)]  flex flex-col justify-between max-w-[13rem] py-4 shadow-xl shadow-blue-gray-900/8 bg-white">
       <div>
         <div className="flex flex-col items-center justify-center mb-2 px-4">
           <img
@@ -84,7 +47,7 @@ export default function Sidebar() {
         <hr className="my-2 border-blue-gray-50" />
       </div>
       <List className="mb-[10rem] min-w-[11rem]">
-        {MENU.map((item) => {
+        {USER_MENU.map((item) => {
           return (
             <ListItem
               key={item.title}
@@ -114,8 +77,13 @@ export default function Sidebar() {
           Log Out
         </ListItem>
         <div className="flex items-center gap-4 ml-1">
-          <Avatar src={avatar} alt="avatar" size="sm" />
-          <Typography variant="h6">Ngoc Nguyen</Typography>
+          <Avatar
+            src={user.avatar}
+            alt="avatar"
+            size="sm"
+            className="object-cover object-center"
+          />
+          <Typography variant="h6">{user.fullname}</Typography>
         </div>
       </List>
     </div>

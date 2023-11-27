@@ -3,8 +3,7 @@ import { Card, Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import CheckboxDefault from "@app/components/Checkbox/CheckboxDefault";
 import { useState } from "react";
-import { ClientRequest, defaultUser } from "./types";
-import { useForm } from "react-hook-form";
+import { ClientRequest, defaultClientRequest, defaultUser } from "./types";
 import PasswordHelperTooltip from "@app/components/Tooltip/PasswordHelperTooltip";
 import { clientSignUpMiddleware } from "./services/api";
 import { toast } from "react-toastify";
@@ -13,7 +12,7 @@ import LabelNotification from "@app/components/Notification/LabelNotification";
 export default function ClientSignUp() {
   const navigate = useNavigate();
   const [clientRequest, setClientRequest] =
-    useState<ClientRequest>(defaultUser);
+    useState<ClientRequest>(defaultClientRequest);
   const handleSubbmit = (e) => {
     e.preventDefault();
     clientSignUpMiddleware(clientRequest)

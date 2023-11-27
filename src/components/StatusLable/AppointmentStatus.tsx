@@ -1,6 +1,7 @@
+import { APPOINTMENT_STATUS } from "@app/pages/appointment/types";
 import { Chip } from "@material-tailwind/react";
 interface Props {
-  status: "finished" | "pending" | "cancel";
+  status: APPOINTMENT_STATUS;
 }
 const AppointmentStatus = (props: Props) => {
   const { status } = props;
@@ -10,7 +11,13 @@ const AppointmentStatus = (props: Props) => {
       variant="ghost"
       value={status}
       color={
-        status === "finished" ? "green" : status === "pending" ? "amber" : "red"
+        status === APPOINTMENT_STATUS.FINISHED
+          ? "green"
+          : status === APPOINTMENT_STATUS.PENDING
+          ? "amber"
+          : status === APPOINTMENT_STATUS.APPROVED
+          ? "blue"
+          : "red"
       }
     />
   );

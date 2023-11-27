@@ -16,6 +16,7 @@ import Appointment from "../appointment/Appoinment";
 import Schedule from "../Schedule/Schedule";
 import ConfirmEmail from "../auth/ConfirmEmail";
 import { setupInterceptors } from "@app/services/axios";
+import PublicRoute from "./PublicRoute";
 
 setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
@@ -29,16 +30,22 @@ export const AppRouter: React.FC = () => {
       <MainLayout />
     </RequireAuth>
   );
+  const publicLayout = (
+    <PublicRoute>
+      <AuthLayoutFallback />
+    </PublicRoute>
+  );
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/landing" element={<App />} />
-        <Route path="/auth" element={<AuthLayoutFallback />}>
-          <Route path="login" element={<Login />} />
+        <Route path="/auth" element={publicLayout}>
+          <Route path="login" index element={<Login />} />
           <Route path="sign-up" element={<SignUp />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="confirm-email" element={<ConfirmEmail />} />
         </Route>
+        <Route path="/landing" element={<App />} />
+
         <Route path={"error/404"} element={<NotFound />} />
 
         <Route path="/*" element={protectedLayout} />

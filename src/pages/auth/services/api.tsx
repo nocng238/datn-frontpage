@@ -18,7 +18,7 @@ export const clientSignUpMiddleware = async (request: ClientRequest) => {
 };
 
 export const loginMiddleware = async (loginRequest: LoginRequest) => {
-  const res = await Axios.post<LoginReponse>("/login", loginRequest);
+  const res = await Axios.post<LoginReponse>("/auth/login", loginRequest);
   return res.data;
 };
 

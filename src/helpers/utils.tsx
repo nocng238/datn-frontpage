@@ -87,6 +87,7 @@ export const isValidPhone = (phone: string): boolean | undefined => {
   return isMobilePhone(phone);
 };
 export const regexVietNamesePhoneNumber = (phone: string) => {
+  if (!phone) return undefined;
   const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
 
   return phone.match(regexPhoneNumber) ? true : false;
@@ -271,20 +272,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCardNumber(value: string) {
-  const val = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-  const matches = val.match(/\d{4,16}/g);
-  const match = (matches && matches[0]) || "";
-  const parts = [];
+  const regex = /^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g;
+  const onlyNumbers = value.replace(/[^\d]/g, "");
 
-  for (let i = 0, len = match.length; i < len; i += 4) {
-    parts.push(match.substring(i, i + 4));
-  }
-
-  if (parts.length) {
-    return parts.join(" ");
-  } else {
-    return value;
-  }
+  return onlyNumbers.replace(regex, (regex, $1, $2, $3, $4) =>
+    [$1, $2, $3, $4].filter((group) => !!group).join(" ")
+  );
 }
 
 export function formatExpires(value: string) {

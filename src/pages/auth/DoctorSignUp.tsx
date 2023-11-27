@@ -52,9 +52,9 @@ export default function DoctorSignUp() {
         <LabelNotification type="error" message="Invalid phone number!" />
       );
     }
-    const specificAddress = `${doctorInfo.address},${ward.name},${district.name},${city.name}`;
+    const specificAddress = `${doctorInfo.address}, ${ward.name}, ${district.name}, ${city.name}`;
     doctorSignUpMiddleware({ ...doctorInfo, address: specificAddress })
-      .then((res) => {
+      .then((_res) => {
         navigate("/auth/confirm-email", {
           state: {
             email: doctorInfo.email,

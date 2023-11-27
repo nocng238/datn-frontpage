@@ -29,6 +29,7 @@ import {
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { cn } from "@app/helpers/utils";
+import path from "path";
 // import PdfFullscreen from './PdfFullscreen'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -38,22 +39,12 @@ interface PdfRendererProps {
 }
 
 const PdfRenderer = ({ url }: PdfRendererProps) => {
-  //   const { toast } = useToast()
-
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
   const [renderedScale, setRenderedScale] = useState<number | null>(null);
   const [rotation, setRotation] = useState<number>(0);
   const isLoading = renderedScale !== scale;
-
-  //   const CustomPageValidator = z.object({
-  //     page: z
-  //       .string()
-  //       .refine((num) => Number(num) > 0 && Number(num) <= numPages!),
-  //   });
-
-  //   type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
 
   const {
     register,
@@ -64,22 +55,16 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
     defaultValues: {
       page: "1",
     },
-    // resolver: zodResolver(CustomPageValidator),
   });
 
-  //   console.log(errors);
-
   const { width, ref } = useResizeDetector();
-  // const width = 0;
-  console.log(width);
-
   const handlePageSubmit = ({ page }: any) => {
     setCurrPage(Number(page));
     setValue("page", String(page));
   };
 
   return (
-    <div className="w-[50%] bg-white rounded-md shadow flex flex-col items-center overflow-auto">
+    <div className="w-full bg-white rounded-md shadow flex flex-col items-center overflow-auto">
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
         <div className="flex items-center gap-1.5">
           <Button
@@ -105,6 +90,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                   handleSubmit(handlePageSubmit)();
                 }
               }}
+              disabled
               value={currPage}
             />
 

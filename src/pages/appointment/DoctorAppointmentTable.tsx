@@ -53,8 +53,8 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  "Doctor",
-  "Address",
+  "Client",
+  "Phone number",
   "Status",
   "Payment Status",
   "Payment",
@@ -81,8 +81,6 @@ const TABLE_ROWS = [
     org: "Developer",
     status: false,
     account: "visa",
-    // paymentsStatus: false,
-
     date: "23/04/18",
   },
   {
@@ -117,39 +115,8 @@ const TABLE_ROWS = [
   },
 ];
 
-export default function MembersTable() {
+export default function DoctorAppointmentTable() {
   const openCreateModal = useBoolean();
-
-  const renderCreateModal = () => {
-    if (openCreateModal.value) {
-      return (
-        <Dialog
-          size="xl"
-          open={openCreateModal.value}
-          handler={() => {
-            console.log("close modal");
-          }}
-          className="overflow-auto"
-        >
-          <DialogHeader className="justify-between">
-            <Typography variant="h5" color="blue-gray">
-              Create appoinment
-            </Typography>
-            <div className="flex items-center gap-2">
-              <XCircleIcon
-                className="w-8 h-8 cursor-pointer"
-                onClick={() => openCreateModal.setValue(false)}
-              />
-            </div>
-          </DialogHeader>
-          <DialogBody>
-            <CreateAppointmentProcess />
-          </DialogBody>
-        </Dialog>
-      );
-    }
-    return null;
-  };
   return (
     <Card className="h-full w-full">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -161,16 +128,6 @@ export default function MembersTable() {
             {/* <Typography color="gray" className="mt-1 font-normal">
               See information about all members
             </Typography> */}
-          </div>
-          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              className="flex items-center gap-3"
-              size="sm"
-              onClick={() => openCreateModal.setValue(true)}
-            >
-              <CalendarDaysIcon strokeWidth={2} className="h-5 w-5" /> Create
-              appoinment
-            </Button>
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
@@ -341,7 +298,6 @@ export default function MembersTable() {
           </Button>
         </div>
       </CardFooter>
-      {renderCreateModal()}
     </Card>
   );
 }

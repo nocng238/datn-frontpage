@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Stepper,
   Step,
@@ -12,21 +12,61 @@ import DoctorIcon from "@app/assets/icons/icon-doctor.svg";
 import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import DoctorCard from "../doctor/DoctorCard";
 import NoteIcon from "@app/assets/icons/icon-note.svg";
-import Payments from "../Profile/Payments";
-export default function CreateAppointmentProcess() {
+import { DoctorDetail, defaultDoctorDetail } from "../doctor/types";
+import { getDoctorsMiddleware } from "../doctor/services/api";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
+import { MESSAGE } from "@app/constants/message";
+import { useString } from "@app/helpers/hooks";
+import { CreateAppointmentRequest } from "./types";
+import { createAppointmentMiddleware } from "./services/api";
+import { error } from "console";
+interface Props {
+  onCloseModal: () => void;
+}
+export default function CreateAppointmentProcess(props: Props) {
+  const { onCloseModal } = props;
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(false);
   const [dateTime, setDateTime] = useState<Date>();
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
-  const loop = [12, 3, 4, 5, 4, 2, 2, 3, 11, 2323232, 1, 1, 1, 1];
-  const [selectedDoctor, setSelectedDoctor] = useState<any>();
+  const [selectedDoctor, setSelectedDoctor] =
+    useState<DoctorDetail>(defaultDoctorDetail);
+  const [doctors, setDoctors] = useState<DoctorDetail[]>([]);
+  const description = useString();
   const today = new Date();
-  today.setHours(today.getHours() + 5);
+  today.setHours(today.getHours() + 1);
   today.setMinutes(0);
   today.setSeconds(0);
 
+  useEffect(() => {
+    if (!dateTime) {
+      return;
+    }
+    const endTime = new Date(dateTime);
+    endTime.setHours(endTime.getHours() + 1);
+    getDoctorsMiddleware({
+      startTime: dateTime.toISOString(),
+      endTime: endTime.toISOString(),
+    })
+      .then((res) => {
+        setDoctors(res.items);
+        setSelectedDoctor(defaultDoctorDetail);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
+  }, [dateTime]);
+  const onSelectDoctor = (doctor: DoctorDetail) => {
+    setSelectedDoctor(doctor);
+  };
   const renderStepContent = () => {
     if (activeStep === 0) {
       return (
@@ -48,13 +88,17 @@ export default function CreateAppointmentProcess() {
     if (activeStep === 1) {
       return (
         <div className="grid grid-cols-auto-fill-min-350 gap-6 my-1">
-          {loop.map((item) => {
+          {doctors.map((doctor) => {
             return (
-              <DoctorCard
-                onClick={() => {
-                  // openModal.setValue(true);
-                }}
-              />
+              <div
+                onClick={() => onSelectDoctor(doctor)}
+                className="cursor-pointer"
+              >
+                <DoctorCard
+                  doctorDetail={doctor}
+                  selectedDoctorId={selectedDoctor.id}
+                />
+              </div>
             );
           })}
         </div>
@@ -64,12 +108,51 @@ export default function CreateAppointmentProcess() {
       return (
         <div className="flex items-center justify-around">
           <div className="flex items-center justify-around pr-6 w-[32rem]">
-            <Textarea color="blue-gray" label="Description" rows={8} />
+            <Textarea
+              color="blue-gray"
+              label="Description"
+              rows={8}
+              value={description.value}
+              onChange={(e) => description.setValue(e.target.value)}
+            />
           </div>
         </div>
       );
     }
   };
+
+  const disableNextForStep2 = () => {
+    return activeStep === 1 && !selectedDoctor.id ? true : false;
+  };
+  const handleCreateAppointment = () => {
+    if (!dateTime || !selectedDoctor.id) {
+      return;
+    }
+    const endTime = new Date(dateTime);
+    endTime.setHours(endTime.getHours() + 1);
+    const request: CreateAppointmentRequest = {
+      startTime: dateTime.toISOString(),
+      endTime: endTime.toISOString(),
+      doctorId: selectedDoctor.id,
+      client_note: description.value,
+    };
+    createAppointmentMiddleware(request)
+      .then((_res) => {
+        toast(<LabelNotification type="success" message="Success" />);
+        onCloseModal();
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
+    //call api
+  };
+
+  const onConfirmCreateAppoinment = () => {};
   return (
     <div className="w-full px-24 py-4 max-h-[90vh]">
       <Stepper
@@ -136,7 +219,12 @@ export default function CreateAppointmentProcess() {
         <Button onClick={handlePrev} disabled={isFirstStep}>
           Prev
         </Button>
-        <Button onClick={handleNext} disabled={isFirstStep && !dateTime}>
+        <Button
+          onClick={() => {
+            isLastStep ? handleCreateAppointment() : handleNext();
+          }}
+          disabled={(isFirstStep && !dateTime) || disableNextForStep2()}
+        >
           {isLastStep ? "Create" : "Next"}{" "}
         </Button>
       </div>
