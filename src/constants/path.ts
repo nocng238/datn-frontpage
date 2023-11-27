@@ -6,4 +6,5 @@ export const PATH = {
   forgot: "/auth/forgot-password",
   profile: "/profile",
   doctor: "/doctor",
+  appointment: "/appointment",
 };

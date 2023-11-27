@@ -14,6 +14,8 @@ import {
   head,
   isEmpty,
 } from "lodash";
+import { twMerge } from "tailwind-merge";
+import clsx, { ClassValue } from "clsx";
 
 export const getFieldValue = (
   field:
@@ -84,6 +86,12 @@ export const isValidPhone = (phone: string): boolean | undefined => {
   if (isEmpty(phone)) return undefined;
   return isMobilePhone(phone);
 };
+export const regexVietNamesePhoneNumber = (phone: string) => {
+  if (!phone) return undefined;
+  const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+
+  return phone.match(regexPhoneNumber) ? true : false;
+};
 
 export const getFirstLetterInName = (name: string, justOne = false) => {
   if (!name) {
@@ -128,6 +136,7 @@ export function convertUrlBase64(url: string) {
 // }
 
 export function validationPassword(password: string) {
+  if (!password) return undefined;
   return REGEX_PASSWORD.test(password);
 }
 
@@ -257,3 +266,25 @@ export const findWithRegex = (
   }
   return allMatch ? [] : "";
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function formatCardNumber(value: string) {
+  const regex = /^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g;
+  const onlyNumbers = value.replace(/[^\d]/g, "");
+
+  return onlyNumbers.replace(regex, (regex, $1, $2, $3, $4) =>
+    [$1, $2, $3, $4].filter((group) => !!group).join(" ")
+  );
+}
+
+export function formatExpires(value: string) {
+  return value
+    .replace(/[^0-9]/g, "")
+    .replace(/^([2-9])$/g, "0$1")
+    .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
+    .replace(/^0{1,}/g, "0")
+    .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
+}

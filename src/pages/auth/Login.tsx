@@ -16,6 +16,9 @@ import InputDefault from "@app/components/Input/InputDefault";
 import { isEmpty, isUndefined } from "lodash";
 import { isValidEmail, validationPassword } from "@app/helpers/utils";
 import CheckboxDefault from "@app/components/Checkbox/CheckboxDefault";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
+import { loginMiddleware } from "./services/api";
 export default function Login() {
   const navigate = useNavigate();
   const [info, setInfo] = useState<LoginRequest>(defaultLoginRequest);
@@ -41,21 +44,35 @@ export default function Login() {
   ): void => {
     if (event.key === "Enter") {
       event.preventDefault();
-      //   if (handleDisableButtonAccount()) {
-      //     return
-      //   }
-      //   onClickButton()
+      onSubmit();
     }
   };
-  const onChangeInput = () => {};
   const handleChangeInput = (key: "email" | "password") => (event: any) => {
     setInfo({
       ...info,
       [key]: event.target.value,
     });
-    // if (key === "email") {
-    //   setStatusInputEmail(changeLabelStatusEmail(event.target.value))
-    // }
+  };
+  const onSubmit = () => {
+    if (!validatePassword() || !isValidEmail(info.email)) {
+      return toast(
+        <LabelNotification type="error" message="Wrong email or password" />
+      );
+    }
+    loginMiddleware(info)
+      .then((res) => {
+        localStorage.setItem("access_token", res.accessToken);
+        localStorage.setItem("timezone", "+0700");
+        navigate("/profile");
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data.message}
+          />
+        );
+      });
   };
   return (
     <Card className="w-96 bg-opacity-70">
@@ -76,6 +93,7 @@ export default function Login() {
           error={inValidEmail()}
           success={isValidEmail(info.email)}
           className="py-2"
+          onKeyPress={onKeyPressInput}
         />
         <InputDefault
           label="Password"
@@ -84,6 +102,7 @@ export default function Login() {
           error={inValidPassword()}
           success={validatePassword()}
           onChange={handleChangeInput("password")}
+          onKeyPress={onKeyPressInput}
         />
         <div className="flex items-center justify-between -ml-2.5">
           <CheckboxDefault label="Remember Me" />
@@ -91,7 +110,7 @@ export default function Login() {
             variant="small"
             className="cursor-pointer transition-colors hover:text-gray-900"
             onClick={() => {
-              navigate("/forgot-password");
+              navigate("/auth/forgot-password");
             }}
           >
             {" "}
@@ -105,6 +124,7 @@ export default function Login() {
           color="blue-gray"
           fullWidth
           className="cursor-pointer"
+          onClick={onSubmit}
         >
           Sign In
         </Button>
@@ -114,7 +134,7 @@ export default function Login() {
             // as="a"
             // href="#signup"
             onClick={() => {
-              navigate("/sign-up");
+              navigate("/auth/sign-up");
             }}
             variant="small"
             color="blue-gray"

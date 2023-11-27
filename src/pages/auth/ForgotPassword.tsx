@@ -47,12 +47,9 @@ export default function ForgotPassword() {
           Your Email
         </Typography>
         <InputDefault
-          size="lg"
-          className={`!border-blue-gray-200 focus:!border-gray-900`}
-          onChange={handleChangeInput}
-          labelProps={{
-            className: "hidden",
-          }}
+          type="email"
+          value={email.value}
+          onChange={(e) => email.setValue(e.target.value)}
         />
       </CardBody>
       <CardFooter className="pt-0">

@@ -13,6 +13,7 @@ export interface InputDefaultProps extends InputProps {
   customIcon?: string;
   classCustom?: string;
   styleRootInput?: React.CSSProperties;
+  type?: React.HTMLInputTypeAttribute | "phone";
 }
 
 export interface InputSearchProps
