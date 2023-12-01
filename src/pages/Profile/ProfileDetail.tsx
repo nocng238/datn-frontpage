@@ -93,13 +93,13 @@ const ProfileDetail = () => {
     ) {
       let newAddress = userRequest.address;
       if (key === "city" && city) {
-        newAddress = newAddress.replace(city?.name, value);
+        newAddress = newAddress?.replace(city?.name, value);
       }
       if (key === "district" && district) {
-        newAddress = newAddress.replace(district.name, value);
+        newAddress = newAddress?.replace(district.name, value);
       }
       if (key === "ward" && ward) {
-        newAddress = newAddress.replace(ward.name, value);
+        newAddress = newAddress?.replace(ward.name, value);
       }
       if (key === "address") {
         newAddress = `${value}, ${ward?.name}, ${district?.name}, ${city?.name}`;

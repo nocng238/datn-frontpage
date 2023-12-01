@@ -3,8 +3,10 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
   CalendarDaysIcon,
   CreditCardIcon,
+  EyeIcon,
   PencilIcon,
   XCircleIcon,
+  CalendarIcon,
 } from "@heroicons/react/24/solid";
 import NoteIcon from "@app/assets/icons/icon-note.svg";
 import CancelAppointmentIcon from "@app/assets/icons/icon-cancel-appointment.svg";
@@ -14,15 +16,10 @@ import CodIcon from "@app/assets/icons/cod-icon.svg";
 import {
   Card,
   CardHeader,
-  Input,
   Typography,
   Button,
   CardBody,
-  Chip,
   CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
   Avatar,
   IconButton,
   Tooltip,
@@ -30,12 +27,26 @@ import {
   DialogHeader,
   DialogFooter,
   DialogBody,
+  Textarea,
 } from "@material-tailwind/react";
-import { useBoolean } from "@app/helpers/hooks";
+import { useBoolean, useString } from "@app/helpers/hooks";
 import CreateAppointmentProcess from "./CreateAppointmentProcess";
 import InputDefault from "@app/components/Input/InputDefault";
 import PaymentStatusLable from "@app/components/StatusLable/PaymentStatus";
 import AppointmentStatus from "@app/components/StatusLable/AppointmentStatus";
+import { useEffect, useState } from "react";
+import { APPOINTMENT_STATUS, DoctorAppoinmentDetail } from "./types";
+import { Pagination, emptyPagination } from "@app/types";
+import {
+  approveAppointment,
+  getListAppointmentForDoctor,
+} from "./services/api";
+import LabelNotification from "@app/components/Notification/LabelNotification";
+import { MESSAGE } from "@app/constants/message";
+import { toast } from "react-toastify";
+import { cl } from "@fullcalendar/core/internal-common";
+import { formatDate } from "@app/helpers/utils";
+import { error } from "console";
 
 const TABS = [
   {
@@ -62,79 +73,170 @@ const TABLE_HEAD = [
   "",
 ];
 
-const TABLE_ROWS = [
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    name: "John Michael",
-    email: "john@creative-tim.com",
-    job: "Manager",
-    org: "Organization",
-    status: "pending",
-    date: "23/04/18",
-    account: "visa",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa Liras",
-    email: "alexa@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    status: false,
-    account: "visa",
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent Perrier",
-    email: "laurent@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
-    status: false,
-    date: "19/09/17",
-    account: "cod",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael Levi",
-    email: "michael@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    status: true,
-    date: "24/12/08",
-    account: "creditcard",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    name: "Richard Gran",
-    email: "richard@creative-tim.com",
-    job: "Manager",
-    org: "Executive",
-    status: false,
-    date: "04/10/21",
-    account: "visa",
-  },
-];
-
 export default function DoctorAppointmentTable() {
   const openCreateModal = useBoolean();
+  const [appointments, setAppointments] = useState<DoctorAppoinmentDetail[]>(
+    []
+  );
+  const [pagination, setPagination] = useState<Pagination>(emptyPagination);
+  const search = useString();
+  const openModal = useBoolean();
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<DoctorAppoinmentDetail>();
+  useEffect(() => {
+    getAppointmentList();
+  }, []);
+
+  const getAppointmentList = () => {
+    getListAppointmentForDoctor({ search: search.value })
+      .then((res) => {
+        setAppointments(res.items);
+        setPagination(res.meta);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast(
+          <LabelNotification type="error" message={MESSAGE.COMMON_ERROR} />
+        );
+      });
+  };
+  const onKeyPressSearchInput = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      getAppointmentList();
+    }
+  };
+  const handleApproveAppoinment = () => {
+    console.log("selectedAppointment: ", selectedAppointment);
+
+    if (!selectedAppointment) return;
+    const appointmentIndex = appointments.findIndex(
+      (item) => item.id === selectedAppointment.id
+    );
+    console.log("appointmentIndex : ", appointmentIndex);
+
+    if (appointmentIndex === -1) return;
+    approveAppointment(selectedAppointment.id)
+      .then((_res) => {
+        appointments[appointmentIndex].status = APPOINTMENT_STATUS.APPROVED;
+        setAppointments([...appointments]);
+        toast(<LabelNotification type="success" message={"Success"} />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      })
+      .finally(() => {
+        openModal.setValue(false);
+      });
+  };
+
+  const renderModalDetail = () => {
+    if (!selectedAppointment) return;
+    return (
+      <Dialog
+        size="sm"
+        className="p-6"
+        open={openModal.value}
+        handler={() => openModal.setValue(!openModal.value)}
+      >
+        <DialogHeader>
+          <div>
+            <Typography variant="h3" className="mb-6 font-medium leading-[1.5]">
+              Appointment Scheduled
+            </Typography>
+            <div className="flex gap-2 items-center">
+              <Avatar
+                src={selectedAppointment.client.avatar}
+                className="w-10 h-10 object-cover"
+              />
+              <Typography variant="small" color="gray" className="font-medium">
+                <span className="font-normal">with</span>{" "}
+                {selectedAppointment.client.fullname}
+              </Typography>
+            </div>
+          </div>
+        </DialogHeader>
+        <DialogBody>
+          <div>
+            <div className="flex gap-8 items-center p-2 bg-gray-200 rounded-md">
+              <CalendarIcon className="w-8 h-8" />
+              <div>
+                <Typography variant="h6" className="font-medium" color="gray">
+                  {" "}
+                  DATE & TIME
+                </Typography>
+                <Typography
+                  variant="small"
+                  color="gray"
+                  className="text-xs font-normal"
+                >
+                  {formatDate(selectedAppointment.startTime)}
+                </Typography>
+              </div>
+            </div>
+            <div className="mt-4">
+              <Typography color="blue-gray" className="font-medium mb-2">
+                Note from client
+              </Typography>
+              <Textarea value={selectedAppointment.note} disabled />
+            </div>
+          </div>
+        </DialogBody>
+        <DialogFooter className="flex items-center justify-center gap-10">
+          <Button
+            size="md"
+            variant="outlined"
+            color="blue"
+            className="flex items-center"
+            onClick={() => {
+              openModal.setValue(false);
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            size="md"
+            variant="gradient"
+            color="blue"
+            className="flex items-center"
+            onClick={handleApproveAppoinment}
+          >
+            Approve
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    );
+  };
   return (
-    <Card className="h-full w-full">
+    <Card className="w-full">
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
               Appointment list
             </Typography>
-            {/* <Typography color="gray" className="mt-1 font-normal">
-              See information about all members
-            </Typography> */}
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="w-full md:w-72">
             <InputDefault
               label="Search"
-              icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              icon={
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 cursor-pointer"
+                  onClick={() => {
+                    getAppointmentList();
+                  }}
+                />
+              }
+              onChange={(e) => search.setValue(e.target.value)}
+              onKeyPress={onKeyPressSearchInput}
             />
           </div>
         </div>
@@ -160,128 +262,121 @@ export default function DoctorAppointmentTable() {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(
-              (
-                { img, name, email, job, org, status, date, account },
-                index
-              ) => {
-                const isLast = index === TABLE_ROWS.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-4 border-b border-blue-gray-50";
+            {appointments.map((appointment, index) => {
+              const isLast = index === appointments.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
 
-                return (
-                  <tr key={name}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <Avatar src={img} alt={name} size="sm" />
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {name}
-                          </Typography>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
-                          >
-                            {email}
-                          </Typography>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={classes}>
+              return (
+                <tr key={appointment.id}>
+                  <td className={classes}>
+                    <div className="flex items-center gap-3">
+                      <Avatar src={appointment.client.avatar} size="sm" />
                       <div className="flex flex-col">
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {job}
+                          {appointment.client.fullname}
                         </Typography>
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal opacity-70"
                         >
-                          {org}
+                          {appointment.client.email}
                         </Typography>
                       </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="w-max">
-                        <AppointmentStatus status="pending" />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="w-max">
-                        <PaymentStatusLable status="paid" />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                        {account === "visa" ? (
-                          <CreditCardIcon
-                            // size="sm"
-                            // alt={account}
-                            // variant="square"
-                            className="h-full w-full object-contain p-1"
-                          />
-                        ) : account === "creditcard" ? (
-                          <CustomIcon
-                            src={PaypalIcon}
-                            className="h-full w-full object-contain p-1"
-                          />
-                        ) : (
-                          <CustomIcon
-                            src={CodIcon}
-                            className="h-full w-full object-contain p-1"
-                          />
-                        )}
-                      </div>
-                    </td>
-                    <td className={classes}>
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <div className="flex flex-col">
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {date}
+                        {appointment.client.phone}
                       </Typography>
-                    </td>
-                    <td className={classes}>
-                      {/* <Tooltip content="Edit User">
-                        <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip> */}
-                      <Tooltip content="Doctor note">
-                        <IconButton variant="text">
-                          <CustomIcon src={NoteIcon} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip content="Cancel appointment">
-                        <IconButton
-                          variant="text"
-                          disabled
-                          onClick={() => {
-                            console.log("hi");
-                          }}
-                        >
-                          <CustomIcon
-                            src={CancelAppointmentIcon}
-                            className="w-4 h-4"
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <div className="w-max">
+                      <AppointmentStatus status={appointment.status} />
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <div className="w-max">
+                      <PaymentStatusLable status={appointment.paymentStatus} />
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
+                      {appointment.id === "visa" ? (
+                        <CreditCardIcon
+                          // size="sm"
+                          // alt={account}
+                          // variant="square"
+                          className="h-full w-full object-contain p-1"
+                        />
+                      ) : appointment.id === "creditcard" ? (
+                        <CustomIcon
+                          src={PaypalIcon}
+                          className="h-full w-full object-contain p-1"
+                        />
+                      ) : (
+                        <CustomIcon
+                          src={CodIcon}
+                          className="h-full w-full object-contain p-1"
+                        />
+                      )}
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {formatDate(appointment.startTime)}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Tooltip content="View more">
+                      <IconButton
+                        variant="text"
+                        onClick={() => {
+                          setSelectedAppointment(appointment);
+                          openModal.setValue(true);
+                        }}
+                      >
+                        <EyeIcon className="h-5 w-5" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip content="Doctor note">
+                      <IconButton variant="text">
+                        <CustomIcon src={NoteIcon} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip content="Approve this appoinment">
+                      <IconButton
+                        variant="text"
+                        onClick={() => {
+                          console.log("hi");
+                        }}
+                      >
+                        <CustomIcon
+                          src={CancelAppointmentIcon}
+                          className="w-4 h-4"
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </CardBody>
@@ -298,6 +393,7 @@ export default function DoctorAppointmentTable() {
           </Button>
         </div>
       </CardFooter>
+      {renderModalDetail()}
     </Card>
   );
 }

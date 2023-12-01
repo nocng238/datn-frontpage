@@ -95,14 +95,14 @@ export const setupInterceptors = () => {
 
       closeLoading();
       // "Unauthorized"
-      if (error.response.status === 401) {
-        localStorage.removeItem("access_token");
-        return;
-      }
+      // if (error.response.status === 401) {
+      //   localStorage.removeItem("access_token");
+      //   return;
+      // }
       // Forbidden denied redirect to 404 page
-      if (error.response.status === 403) {
-        <Navigate to={PATH.notFound} replace />;
-      }
+      // if (error.response.status === 403) {
+      //   <Navigate to={PATH.notFound} replace />;
+      // }
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       return Promise.reject(error);

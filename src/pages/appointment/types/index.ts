@@ -4,7 +4,7 @@ export interface CreateAppointmentRequest {
   startTime: string;
   endTime: string;
   doctorId: string;
-  client_note?: string;
+  note?: string;
 }
 export enum APPOINTMENT_STATUS {
   PENDING = "PENDING",
@@ -25,9 +25,9 @@ export interface ClientAppointMentDetail {
   endTime: string;
   createdAt: string;
   updatedAt: string;
-  reviewId: null;
+  reviewId: string;
   doctor: UserInfo;
-  note: null;
+  note: string;
   paymentStatus: PAYMENT_STATUS;
 }
 
@@ -39,8 +39,14 @@ export interface DoctorAppoinmentDetail {
   endTime: string;
   createdAt: string;
   updatedAt: string;
-  reviewId: null;
+  reviewId: string;
   client: UserInfo;
-  note: null;
+  note: string;
   paymentStatus: PAYMENT_STATUS;
+}
+
+export interface AppointmentFilter {
+  search?: string;
+  status?: APPOINTMENT_STATUS;
+  paymentStatus?: PAYMENT_STATUS;
 }

@@ -28,3 +28,12 @@ export const updateCvDoctor = async (formData: FormData) => {
   const res = await Axios.post<string>("/doctor/upload-cv", formData);
   return res.data;
 };
+
+export const addCreditCard = async (paymentMethodId: string) => {
+  const res = await Axios.post<string>("/credit-card", { paymentMethodId });
+  return res.data;
+};
+export const charge = async (paymentMethodId: string, amount = 100) => {
+  const res = await Axios.post("/charge", { paymentMethodId, amount });
+  return res.data;
+};

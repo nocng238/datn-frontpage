@@ -18,14 +18,14 @@ import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
 import { useString } from "@app/helpers/hooks";
-import { CreateAppointmentRequest } from "./types";
+import { ClientAppointMentDetail, CreateAppointmentRequest } from "./types";
 import { createAppointmentMiddleware } from "./services/api";
-import { error } from "console";
 interface Props {
   onCloseModal: () => void;
+  handleAddAppointment: () => void;
 }
 export default function CreateAppointmentProcess(props: Props) {
-  const { onCloseModal } = props;
+  const { onCloseModal, handleAddAppointment } = props;
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
   const [isFirstStep, setIsFirstStep] = useState(false);
@@ -134,11 +134,12 @@ export default function CreateAppointmentProcess(props: Props) {
       startTime: dateTime.toISOString(),
       endTime: endTime.toISOString(),
       doctorId: selectedDoctor.id,
-      client_note: description.value,
+      note: description.value,
     };
     createAppointmentMiddleware(request)
-      .then((_res) => {
+      .then((res) => {
         toast(<LabelNotification type="success" message="Success" />);
+        handleAddAppointment();
         onCloseModal();
       })
       .catch((error) => {
@@ -149,7 +150,6 @@ export default function CreateAppointmentProcess(props: Props) {
           />
         );
       });
-    //call api
   };
 
   const onConfirmCreateAppoinment = () => {};

@@ -1,6 +1,7 @@
+import { PAYMENT_STATUS } from "@app/pages/appointment/types";
 import { Chip } from "@material-tailwind/react";
 interface Props {
-  status: "paid" | "pending" | "cancel";
+  status: PAYMENT_STATUS;
 }
 const PaymentStatusLable = (props: Props) => {
   const { status } = props;
@@ -9,9 +10,7 @@ const PaymentStatusLable = (props: Props) => {
       size="sm"
       variant="ghost"
       value={status}
-      color={
-        status === "paid" ? "green" : status === "pending" ? "amber" : "red"
-      }
+      color={status === PAYMENT_STATUS.PAID ? "green" : "deep-purple"}
     />
   );
 };

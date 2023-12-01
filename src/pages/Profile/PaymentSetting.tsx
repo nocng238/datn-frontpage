@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
-import { CreditCard, defaultCreditCard } from "./types";
+import { CreditCardProps, defaultCreditCard } from "./types";
 import {
   Button,
   Card,
@@ -9,18 +9,21 @@ import {
   Popover,
   PopoverContent,
   PopoverHandler,
-  Select,
   Typography,
-  Option,
   List,
   ListItem,
 } from "@material-tailwind/react";
-import InputDefault from "@app/components/Input/InputDefault";
 import { useBoolean } from "@app/helpers/hooks";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import AddCreditCardModal from "./payment/AddCreditCardModal";
+import { Elements, ElementsConsumer } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { STRIPE_PUBLIC_KEY } from "@app/config/enviroments";
+import AddCreditCardStripe from "./payment/AddCreditCardStripe";
+import CreditCard from "./payment/CreditCard";
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 const PaymentSetting = () => {
-  const [creditCards, setCreditCards] = useState<CreditCard[]>([
+  const [creditCards, setCreditCards] = useState<CreditCardProps[]>([
     {
       name: "Walker Alan",
       cvc: "179",
@@ -30,16 +33,16 @@ const PaymentSetting = () => {
     },
   ]);
   const [mainCreditCard, setMainCreditCard] =
-    useState<CreditCard>(defaultCreditCard);
+    useState<CreditCardProps>(defaultCreditCard);
   const openAddCreditCardModal = useBoolean(false);
-  const onAddCreditCard = (creditCardInfo: CreditCard) => {
+  const onAddCreditCard = (creditCardInfo: CreditCardProps) => {
     setCreditCards([...creditCards, creditCardInfo]);
     openAddCreditCardModal.setValue(false);
   };
   const onRemoveCard = (cardId: string) => {
     // const newCreditCards = creditCards.filter(item => item.id !== cardId)
   };
-  const handleSelectPrimaryCard = (creditCard: CreditCard) => {
+  const handleSelectPrimaryCard = (creditCard: CreditCardProps) => {
     setMainCreditCard(creditCard);
   };
   const openSelectCardOption = useBoolean();
@@ -56,8 +59,8 @@ const PaymentSetting = () => {
         {creditCards.map((creditCard) => {
           return (
             <div className="relative">
-              <Cards {...creditCard} focused={undefined} />
-              <div className="absolute right-3 top-3 cursor-pointer">
+              <CreditCard />
+              <div className="absolute right-0 top-2 cursor-pointer">
                 <Popover
                   open={openSelectCardOption.value}
                   placement="bottom-start"
@@ -100,12 +103,14 @@ const PaymentSetting = () => {
         }}
         open={openAddCreditCardModal.value}
       >
-        <AddCreditCardModal
-          onAddCreditCard={onAddCreditCard}
-          onCloseModal={() => {
-            openAddCreditCardModal.setValue(false);
-          }}
-        />
+        <Elements stripe={stripePromise}>
+          <AddCreditCardStripe
+            onAddCreditCard={onAddCreditCard}
+            onCloseModal={() => {
+              openAddCreditCardModal.setValue(false);
+            }}
+          />
+        </Elements>
       </Dialog>
     </Card>
   );

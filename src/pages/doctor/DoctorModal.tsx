@@ -67,7 +67,7 @@ const DoctorModal = (props: DoctorModalProps) => {
         <div className="w-full flex rounded-lg ">
           <div className="w-[50%]">this is doctor info</div>
           <div className="w-[50%]">
-            <PdfRenderer url={samplePdf} />
+            <PdfRenderer url={doctorDetail.cv} />
           </div>
         </div>
       </DialogBody>

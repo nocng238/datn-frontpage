@@ -26,18 +26,17 @@ import {
   DialogFooter,
   DialogBody,
 } from "@material-tailwind/react";
-import { useBoolean } from "@app/helpers/hooks";
+import { useBoolean, useString } from "@app/helpers/hooks";
 import CreateAppointmentProcess from "./CreateAppointmentProcess";
 import InputDefault from "@app/components/Input/InputDefault";
 import PaymentStatusLable from "@app/components/StatusLable/PaymentStatus";
 import AppointmentStatus from "@app/components/StatusLable/AppointmentStatus";
 import { useEffect, useState } from "react";
 import { ClientAppointMentDetail } from "./types";
-import { getListAppointment } from "./services/api";
+import { getListAppointmentForClient } from "./services/api";
 import { Pagination, emptyPagination } from "@app/types";
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
-import { PATH } from "@app/constants/path";
 import { MESSAGE } from "@app/constants/message";
 import { formatDate } from "@app/helpers/utils";
 
@@ -52,16 +51,19 @@ const TABLE_HEAD = [
 ];
 export default function ClientAppointmentTable() {
   const openCreateModal = useBoolean();
-  const [appoinments, setAppointment] = useState<ClientAppointMentDetail[]>([]);
+  const [appoinments, setAppointments] = useState<ClientAppointMentDetail[]>(
+    []
+  );
   const [pagination, setPagination] = useState<Pagination>(emptyPagination);
+  const search = useString();
   useEffect(() => {
     getAppointmentList();
   }, []);
 
   const getAppointmentList = () => {
-    getListAppointment()
+    getListAppointmentForClient()
       .then((res) => {
-        setAppointment(res.items);
+        setAppointments(res.items);
         setPagination(res.meta);
       })
       .catch((error) => {
@@ -71,7 +73,9 @@ export default function ClientAppointmentTable() {
         );
       });
   };
-
+  const handleAddAppointment = () => {
+    getAppointmentList();
+  };
   const renderCreateModal = () => {
     if (openCreateModal.value) {
       return (
@@ -97,6 +101,7 @@ export default function ClientAppointmentTable() {
           <DialogBody>
             <CreateAppointmentProcess
               onCloseModal={() => openCreateModal.setValue(false)}
+              handleAddAppointment={handleAddAppointment}
             />
           </DialogBody>
         </Dialog>
@@ -131,6 +136,8 @@ export default function ClientAppointmentTable() {
           <div className="w-full md:w-72">
             <InputDefault
               label="Search"
+              value={search.value}
+              onChange={(e) => search.setValue(e.target.value)}
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
             />
           </div>
@@ -206,7 +213,7 @@ export default function ClientAppointmentTable() {
                   </td>
                   <td className={classes}>
                     <div className="w-max">
-                      <PaymentStatusLable status="paid" />
+                      <PaymentStatusLable status={item.paymentStatus} />
                     </div>
                   </td>
 

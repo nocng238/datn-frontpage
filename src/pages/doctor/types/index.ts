@@ -7,6 +7,7 @@ export interface DoctorDetail {
   address: string;
   avatar: string;
   feePerHour: number;
+  cv: string;
 }
 export const defaultDoctorDetail: DoctorDetail = {
   id: "",
@@ -17,6 +18,7 @@ export const defaultDoctorDetail: DoctorDetail = {
   address: "",
   feePerHour: 0,
   avatar: "",
+  cv: "",
 };
 
 export interface DoctorFilter {

@@ -14,14 +14,18 @@ export const getProvinces = async () => {
 
 export const clientSignUpMiddleware = async (request: ClientRequest) => {
   const res = await Axios.post("/client/register", request);
-  return res.data;
+  return res?.data;
 };
 
 export const loginMiddleware = async (loginRequest: LoginRequest) => {
-  const res = await Axios.post<LoginReponse>("/auth/login", loginRequest);
+  const res = await Axios.post("/auth/login", loginRequest);
   return res.data;
 };
 
 export const doctorSignUpMiddleware = async (request: DoctorRequest) => {
   return Axios.post("/doctor/register", request);
+};
+
+export const verifyEmail = async (email: string, token: string) => {
+  return Axios.post("/verify-email", { email, token });
 };

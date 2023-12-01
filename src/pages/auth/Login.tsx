@@ -53,7 +53,7 @@ export default function Login() {
       [key]: event.target.value,
     });
   };
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!validatePassword() || !isValidEmail(info.email)) {
       return toast(
         <LabelNotification type="error" message="Wrong email or password" />
