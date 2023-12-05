@@ -11,6 +11,7 @@ export enum APPOINTMENT_STATUS {
   APPROVED = "APPROVED",
   CANCEL = "CANCEL",
   FINISHED = "FINISHED",
+  REJECTED = "REJECTED",
 }
 export enum PAYMENT_STATUS {
   PAID = "PAID",
@@ -49,4 +50,6 @@ export interface AppointmentFilter {
   search?: string;
   status?: APPOINTMENT_STATUS;
   paymentStatus?: PAYMENT_STATUS;
+  limit?: number;
+  offset?: number;
 }

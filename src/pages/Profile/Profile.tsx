@@ -19,7 +19,6 @@ import { useString } from "@app/helpers/hooks";
 import ProfileDetail from "./ProfileDetail";
 import Settings from "./Settings";
 import AvatarUpdateIcon from "@app/assets/icons/icon-update-avatar.svg";
-import PaymentSetting from "./PaymentSetting";
 import { useAppSelector } from "@app/hooks/useApp";
 import { updateAvatarMiddleware } from "./services/api";
 import { configureStore } from "@app/stores/configureStore";
@@ -27,6 +26,8 @@ import { setUserInfoAction } from "../auth/stores/actions";
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
+import { lazy } from "react";
+import PaymentSetting from "./PaymentSetting";
 const tabs = [
   {
     label: "Personal Info",
@@ -55,7 +56,7 @@ const Profile = () => {
     if (tab.value === PROFILE_TAB.SETTING) {
       return <Settings />;
     }
-    return <PaymentSetting />;
+    return <PaymentSetting user={user} />;
   };
   const handleChangeAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
@@ -134,7 +135,7 @@ const Profile = () => {
         </CardFooter>
       </Card>
       {/* right side */}
-      {renderTabContent()}
+      {user.id && renderTabContent()}
     </div>
   );
 };

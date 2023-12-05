@@ -30,3 +30,9 @@
   left: 10%;
   background-position: left;
 }
+.color-icon-completed svg path[stroke] {
+  stroke: #56a012;
+}
+.color-icon-abandoned svg path[stroke] {
+  stroke: #ea4545;
+}

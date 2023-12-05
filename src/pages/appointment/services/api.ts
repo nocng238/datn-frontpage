@@ -33,8 +33,6 @@ export const getListAppointmentForClient = async (
 export const getListAppointmentForDoctor = async (
   filter?: AppointmentFilter
 ) => {
-  console.log(filter);
-
   const res = await axios.get<{
     items: DoctorAppoinmentDetail[];
     meta: Pagination;
@@ -48,5 +46,31 @@ export const getListAppointmentForDoctor = async (
 
 export const approveAppointment = async (appointmentId: string) => {
   const res = await axios.put(`/appointment/approve/${appointmentId}`);
+  return res.data;
+};
+
+export const rejectAppointmentMiddleware = async (
+  appointmentId: string,
+  reason: string
+) => {
+  const res = await axios.put(`/appointment/reject/${appointmentId}`, {
+    reason,
+  });
+  return res.data;
+};
+
+export const cancelAppointmentByDoctorMiddleware = async (
+  appointmentId: string,
+  reason: string
+) => {
+  const res = await axios.put(`/appointment/cancel/${appointmentId}`, {
+    reason,
+  });
+  return res.data;
+};
+export const finishAppointmentByDoctorMiddleware = async (
+  appointmentId: string
+) => {
+  const res = await axios.put(`/appointment/finish/${appointmentId}`);
   return res.data;
 };

@@ -5,17 +5,25 @@ export enum PROFILE_TAB {
   SETTING = "setting",
   PAYMENTS = "payments",
 }
+export enum CREDIT_BRAND {
+  VISA = "visa",
+  MASTER = "mastercard",
+}
 export interface CreditCardProps {
-  cvc: string;
-  expiry: string;
-  name: string;
-  number: string;
-  focused: Focused;
+  exp_month: string;
+  exp_year: string;
+  last_4_number: string;
+  brand: CREDIT_BRAND;
+  paymentMethodId: string;
 }
 export const defaultCreditCard: CreditCardProps = {
-  cvc: "",
-  expiry: "",
-  name: "",
-  number: "",
-  focused: "number",
+  exp_month: "",
+  exp_year: "",
+  last_4_number: "",
+  brand: CREDIT_BRAND.VISA,
+  paymentMethodId: "",
 };
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+}

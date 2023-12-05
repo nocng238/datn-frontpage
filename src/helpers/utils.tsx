@@ -288,3 +288,8 @@ export function formatExpires(value: string) {
     .replace(/^0{1,}/g, "0")
     .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
 }
+export const compareDate = (time1: string, time2: string) => {
+  const moment1 = moment(time1);
+  const moment2 = moment(time2);
+  return moment2.diff(moment1, "seconds");
+};

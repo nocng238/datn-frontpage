@@ -9,6 +9,7 @@ import React, {
 import { throttle } from "lodash";
 import { useLocation } from "react-router-dom";
 import { getScreenSpacing } from "./utils";
+import { Pagination, emptyPagination } from "@app/types";
 //   import Scrollbars from "react-custom-scrollbars"
 
 export const mobileScreen = 992;
@@ -348,5 +349,18 @@ export const useCheckActionLoading = (submitAction: any) => {
     actionLoading,
     setActionLoading,
     handleSubmit,
+  };
+};
+
+export const usePagination = () => {
+  const [pagination, setPagination] = useState<Pagination>(emptyPagination);
+  const currentPage = useNumber(0);
+  const pageNumberLimit = 5;
+  return {
+    maxPage: Math.ceil(pagination.totalItems / pageNumberLimit),
+    currentPage,
+    pagination,
+    setPagination,
+    pageNumberLimit,
   };
 };

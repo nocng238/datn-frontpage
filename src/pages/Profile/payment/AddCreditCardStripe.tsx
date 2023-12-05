@@ -24,8 +24,10 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { STRIPE_PUBLIC_KEY } from "@app/config/enviroments";
 import { addCreditCard, charge } from "../services/api";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
 interface AddCreditCardModal {
-  onAddCreditCard: (creditCardInfo: CreditCardProps) => void;
+  onAddCreditCard: () => void;
   onCloseModal: () => void;
 }
 const AddCreditCardStripe = (props: AddCreditCardModal) => {
@@ -58,17 +60,9 @@ const AddCreditCardStripe = (props: AddCreditCardModal) => {
     []
   );
   //   const options = useOptions();
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log(elements);
-
-    // const cardExpiryElement = elements?.getElement(CardExpiryElement);
     const cardElement = elements?.getElement(CardNumberElement);
-    console.log(event);
-
-    // const
-    console.log("cardElement: ", cardElement);
-
     if (!stripe || !elements || !cardElement) {
       return;
     }
@@ -77,30 +71,38 @@ const AddCreditCardStripe = (props: AddCreditCardModal) => {
       type: "card",
       card: cardElement,
     });
-    console.log(stripeResponse);
 
     const { error, paymentMethod } = stripeResponse;
 
     if (error || !paymentMethod) {
-      return;
+      return toast(
+        <LabelNotification
+          type="error"
+          message={error.message || "Failed to add credit card."}
+        />
+      );
     }
     addCreditCard(paymentMethod.id)
       .then((res) => {
-        console.log(res);
+        onAddCreditCard();
       })
       .catch((error) => {
         console.log(error);
+        return toast(
+          <LabelNotification
+            type="error"
+            message={
+              error.response.data?.message || "Failed to add credit card."
+            }
+          />
+        );
       });
-    // charge(paymentMethod.id, 100).then((res) => {
-    //   console.log(res);
-    // });
-    // console.log("[PaymentMethod]", payload);
   };
   return (
     <Card>
-      <div className="pt-4">
+      {/* <div className="pt-4">
         <Cards {...creditCard} />
-      </div>
+      </div> */}
       <CardBody>
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           {/* <CardElement
@@ -143,7 +145,7 @@ const AddCreditCardStripe = (props: AddCreditCardModal) => {
               <CreditCardIcon className="absolute left-0 h-4 w-4 text-blue-gray-300" />
             }
           /> */}
-          <Typography
+          {/* <Typography
             variant="small"
             color="blue-gray"
             className="mb-2 font-medium"
@@ -158,7 +160,7 @@ const AddCreditCardStripe = (props: AddCreditCardModal) => {
             onFocus={() => {
               setCreditCardInfo("focused", "name");
             }}
-          />
+          /> */}
           <div className="flex items-center justify-between gap-4">
             <div>
               <Typography

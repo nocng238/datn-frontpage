@@ -25,7 +25,7 @@ const MainLayout = () => {
       <Sidebar />
       {/* main layout */}
       <div
-        className={`w-[calc(100vw-208px)] flex flex-col flex-1 bg-grayWhite2 overflow-auto p-6 `}
+        className={`max-w-[calc(100vw-208px)] h-[calc(100vh)] flex flex-col flex-1 bg-grayWhite2 overflow-auto p-6 `}
       >
         {/* header */}
         {/* <div className="border-b border-[#E4E4E4]">this is header</div> */}

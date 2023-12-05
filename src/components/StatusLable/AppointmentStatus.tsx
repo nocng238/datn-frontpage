@@ -17,6 +17,8 @@ const AppointmentStatus = (props: Props) => {
           ? "amber"
           : status === APPOINTMENT_STATUS.APPROVED
           ? "blue"
+          : status === APPOINTMENT_STATUS.REJECTED
+          ? "indigo"
           : "red"
       }
     />

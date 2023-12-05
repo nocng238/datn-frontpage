@@ -16,12 +16,12 @@ export interface File {
 export interface Pagination {
   limit: number;
   offset: number;
-  totalItem: number;
+  totalItems: number;
   itemCount: number;
 }
 export const emptyPagination = {
   limit: 0,
   offset: 0,
-  totalItem: 0,
+  totalItems: 0,
   itemCount: 0,
 };

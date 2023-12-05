@@ -13,6 +13,7 @@ export interface UserInfo {
   cvFileName?: string;
   feePerHour?: number;
   description?: string;
+  stripeCustomerId?: string;
 }
 
 export const defaultUser: UserInfo = {

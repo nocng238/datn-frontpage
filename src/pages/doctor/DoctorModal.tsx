@@ -1,4 +1,10 @@
-import { XCircleIcon } from "@heroicons/react/24/solid";
+import {
+  XCircleIcon,
+  MapPinIcon,
+  PhoneIcon,
+  BuildingOfficeIcon,
+  CurrencyDollarIcon,
+} from "@heroicons/react/24/solid";
 import {
   Avatar,
   Button,
@@ -6,22 +12,23 @@ import {
   DialogBody,
   DialogFooter,
   DialogHeader,
+  Rating,
   Typography,
 } from "@material-tailwind/react";
 import PdfRenderer from "./PdfRender";
-// import samplePdf from "@app/assets/Get_Started_With_Smallpdf.pdf";
-import samplePdf from "@app/assets/_ch02 Introduction to Modern Symmetric-key Ciphers.pdf";
-
 import { IUseDefaultValueProps } from "@app/helpers/hooks";
 import { DoctorDetail } from "./types";
 import { defaultAvatar } from "@app/constants/data";
-
+import CustomIcon from "@app/components/CustomIcon/CustomIcon";
+import IconGender from "@app/assets/icons/icon-gender.svg";
+import { useNavigate } from "react-router-dom";
 interface DoctorModalProps {
   openModal: IUseDefaultValueProps;
   doctorDetail: DoctorDetail;
 }
 const DoctorModal = (props: DoctorModalProps) => {
   const { doctorDetail, openModal } = props;
+  const navigate = useNavigate();
   return (
     <Dialog
       size="xl"
@@ -65,7 +72,65 @@ const DoctorModal = (props: DoctorModalProps) => {
       </DialogHeader>
       <DialogBody>
         <div className="w-full flex rounded-lg ">
-          <div className="w-[50%]">this is doctor info</div>
+          <div className="w-[50%] flex flex-col gap-3 overflow-auto">
+            <div className="flex gap-2 items-center">
+              <CustomIcon src={IconGender} />
+              <Typography
+                className="font-medium"
+                font
+                variant="h6"
+                color="black"
+              >
+                {doctorDetail.sex}
+              </Typography>
+            </div>
+            <div className="flex gap-2 items-center">
+              <MapPinIcon className="w-5 h-5" />
+              <Typography
+                className="font-medium"
+                font
+                variant="h6"
+                color="black"
+              >
+                {doctorDetail.address}
+              </Typography>
+            </div>
+            <div className="flex gap-2 items-center">
+              <PhoneIcon className="w-5 h-5" />
+              <Typography
+                className="font-medium"
+                font
+                variant="h6"
+                color="black"
+              >
+                {doctorDetail.phone}
+              </Typography>
+            </div>
+            <div className="flex gap-2 items-center">
+              <BuildingOfficeIcon className="w-5 h-5" />
+              <Typography
+                className="font-medium"
+                font
+                variant="h6"
+                color="black"
+              >
+                {doctorDetail.workplace}
+              </Typography>
+            </div>
+            <div className="flex gap-2 items-center">
+              <CurrencyDollarIcon className="w-5 h-5" />
+              <Typography className="font-medium" variant="h6" color="black">
+                {doctorDetail.feePerHour}$
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="h4" color="black" className="text-center">
+                Customer reviews
+              </Typography>
+            </div>
+          </div>
+
+          {/* doctor cv */}
           <div className="w-[50%]">
             <PdfRenderer url={doctorDetail.cv} />
           </div>
@@ -73,6 +138,12 @@ const DoctorModal = (props: DoctorModalProps) => {
       </DialogBody>
       <DialogFooter className="justify-between">
         <div className="flex items-center gap-16">
+          <div className="flex flex-col gap-1">
+            <Typography variant="small" color="gray" className="font-normal">
+              Rating (4.7 out of 5)
+            </Typography>
+            <Rating value={4} readonly></Rating>
+          </div>
           <div>
             <Typography variant="small" color="gray" className="font-normal">
               Reviews
@@ -83,7 +154,7 @@ const DoctorModal = (props: DoctorModalProps) => {
           </div>
           <div>
             <Typography variant="small" color="gray" className="font-normal">
-              Patients
+              Happy pets
             </Typography>
             <Typography color="blue-gray" className="font-medium">
               553,031
@@ -95,6 +166,9 @@ const DoctorModal = (props: DoctorModalProps) => {
           variant="gradient"
           color="blue"
           className="mr-5 flex items-center"
+          onClick={() => {
+            navigate("/appointment");
+          }}
         >
           Make an appointment
         </Button>
