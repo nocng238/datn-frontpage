@@ -18,7 +18,12 @@ export enum PAYMENT_STATUS {
   UNPAID = "UNPAID",
 }
 
-export interface ClientAppointMentDetail {
+export enum PAYMENT_METHOD {
+  CASH = "CASH",
+  CARD = "CARD",
+}
+
+export interface ClientAppointmentDetail {
   id: string;
   status: APPOINTMENT_STATUS;
   totalPrice: number;
@@ -30,6 +35,7 @@ export interface ClientAppointMentDetail {
   doctor: UserInfo;
   note: string;
   paymentStatus: PAYMENT_STATUS;
+  paymentMethod: PAYMENT_METHOD;
 }
 
 export interface DoctorAppoinmentDetail {
@@ -44,6 +50,7 @@ export interface DoctorAppoinmentDetail {
   client: UserInfo;
   note: string;
   paymentStatus: PAYMENT_STATUS;
+  paymentMethod: PAYMENT_METHOD;
 }
 
 export interface AppointmentFilter {

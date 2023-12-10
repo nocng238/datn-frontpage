@@ -1,9 +1,15 @@
 import CustomIcon from "@app/components/CustomIcon/CustomIcon";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftCircleIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import {
   CalendarDaysIcon,
   CalendarIcon,
+  ChevronDoubleLeftIcon,
+  ChevronLeftIcon,
   CreditCardIcon,
+  CurrencyDollarIcon,
   EyeIcon,
   MapPinIcon,
   PencilIcon,
@@ -38,15 +44,21 @@ import AppointmentStatus from "@app/components/StatusLable/AppointmentStatus";
 import { useEffect, useState } from "react";
 import {
   APPOINTMENT_STATUS,
-  ClientAppointMentDetail,
+  ClientAppointmentDetail,
+  PAYMENT_METHOD,
   PAYMENT_STATUS,
 } from "./types";
-import { getListAppointmentForClient } from "./services/api";
+import {
+  getListAppointmentForClient,
+  paymentMiddleware,
+  sendFeedbackMiddleware,
+} from "./services/api";
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
 import { formatDate } from "@app/helpers/utils";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
+import FeedbackModal from "./Modal/FeedBackModal";
 
 const TABLE_HEAD = [
   "Doctor",
@@ -59,15 +71,16 @@ const TABLE_HEAD = [
 ];
 export default function ClientAppointmentTable() {
   const openCreateModal = useBoolean();
-  const [appoinments, setAppointments] = useState<ClientAppointMentDetail[]>(
+  const [appointments, setAppointments] = useState<ClientAppointmentDetail[]>(
     []
   );
   const [selectedAppointment, setSelectedAppointment] =
-    useState<ClientAppointMentDetail>();
-  const openModal = useBoolean();
+    useState<ClientAppointmentDetail>();
+  const openModalDetail = useBoolean();
   const openConfirmCancelModal = useBoolean();
   const search = useString();
   const openCheckoutModal = useBoolean();
+  const openFeedbackModal = useBoolean();
   const { setPagination, currentPage, maxPage, pageNumberLimit } =
     usePagination();
   useEffect(() => {
@@ -94,15 +107,39 @@ export default function ClientAppointmentTable() {
   const handleAddAppointment = () => {
     getAppointmentList();
   };
+
+  const handlePayment = (
+    paymentMethod: PAYMENT_METHOD,
+    appointmentId: string
+  ) => {
+    const appointmentIndex = appointments.findIndex(
+      (item) => item.id === appointmentId
+    );
+    if (appointmentIndex === -1) return;
+    paymentMiddleware(paymentMethod, appointmentId)
+      .then((_res) => {
+        appointments[appointmentIndex].paymentStatus = PAYMENT_STATUS.PAID;
+        appointments[appointmentIndex].paymentMethod = paymentMethod;
+        setAppointments([...appointments]);
+        openCheckoutModal.setValue(false);
+        toast(<LabelNotification type="success" message={"Success"} />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
+  };
   const renderCreateModal = () => {
     if (openCreateModal.value) {
       return (
         <Dialog
           size="xl"
           open={openCreateModal.value}
-          handler={() => {
-            console.log("close modal");
-          }}
+          handler={() => {}}
           className="overflow-auto"
         >
           <DialogHeader className="justify-between">
@@ -134,7 +171,7 @@ export default function ClientAppointmentTable() {
       <Dialog
         size="sm"
         className="p-6 z-40"
-        open={openModal.value}
+        open={openModalDetail.value}
         handler={() => {}}
       >
         <DialogHeader className="flex flex-col w-full items-start px-4 pt-4 pb-0">
@@ -146,7 +183,7 @@ export default function ClientAppointmentTable() {
               <div className="flex items-center gap-2 ">
                 <XCircleIcon
                   className="w-8 h-8 cursor-pointer"
-                  onClick={() => openModal.setValue(false)}
+                  onClick={() => openModalDetail.setValue(false)}
                 />
               </div>
             </div>
@@ -207,7 +244,7 @@ export default function ClientAppointmentTable() {
                   color="red"
                   onClick={() => {
                     openConfirmCancelModal.setValue(true);
-                    openModal.setValue(false);
+                    openModalDetail.setValue(false);
                   }}
                 >
                   Cancel
@@ -222,14 +259,123 @@ export default function ClientAppointmentTable() {
                     onClick={() => {
                       // openConfirmCancelModal.setValue(true);
                       openCheckoutModal.setValue(true);
-                      openModal.setValue(false);
+                      openModalDetail.setValue(false);
                     }}
                   >
                     Checkout
                   </Button>
                 )}
+              {selectedAppointment.paymentStatus === PAYMENT_STATUS.PAID && (
+                <Button
+                  size="md"
+                  variant="gradient"
+                  color="indigo"
+                  onClick={() => {
+                    // openConfirmCancelModal.setValue(true);
+                    openFeedbackModal.setValue(true);
+                    openModalDetail.setValue(false);
+                  }}
+                >
+                  Review
+                </Button>
+              )}
             </DialogFooter>
           )}
+      </Dialog>
+    );
+  };
+  const renderModalCheckout = () => {
+    if (!selectedAppointment) return;
+    return (
+      <Dialog
+        open={openCheckoutModal.value}
+        handler={() => {
+          // openCheckoutModal.setValue(!openCheckoutModal.value);
+        }}
+        className="px-8"
+        size="sm"
+      >
+        <DialogHeader className="items-center">
+          <div
+            className="p-1 bg-gray-300 rounded-full cursor-pointer hover:bg-gray-500 text"
+            onClick={() => {
+              openCheckoutModal.setValue(false);
+              openModalDetail.setValue(true);
+            }}
+          >
+            <ChevronLeftIcon className="w-5 h-5 text-blue " />
+          </div>
+          <Typography
+            variant="h5"
+            className="w-full text-center mr-3 text-[20px]"
+          >
+            Checkout
+          </Typography>
+        </DialogHeader>
+        <DialogBody className=" flex flex-col gap-3">
+          <div className="flex flex-col py-4 gap-3 border-b-2 border-[#818181]">
+            <Typography variant="h6" className="text-base font-bold">
+              Appointment
+            </Typography>
+            <div className="flex gap-3 items-center">
+              <Typography>
+                with Dr {selectedAppointment.doctor.fullname}
+              </Typography>
+              <Avatar
+                size="sm"
+                variant="circular"
+                alt="tania andrew"
+                src={selectedAppointment.doctor.avatar}
+              />
+            </div>
+            <div className="flex gap-3 items-center">
+              <CalendarIcon className="w-5 h-5" />
+              <Typography variant="h6" color="gray" className="font-normal">
+                {formatDate(selectedAppointment.startTime)}{" "}
+                <span className="font-bold"> - </span>
+                {formatDate(selectedAppointment.endTime)}
+              </Typography>
+            </div>
+            <div className="flex justify-between items-end">
+              <Typography>Number of hours: </Typography>
+              <Typography className="font-bold">1 </Typography>
+            </div>
+            <div className="flex justify-between items-end">
+              <Typography>Fee per hour:</Typography>
+              <Typography className="font-bold">
+                ${selectedAppointment.doctor.feePerHour}
+              </Typography>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <Typography variant="h4">Total</Typography>
+            <Typography variant="h4">
+              ${selectedAppointment.doctor.feePerHour}
+            </Typography>
+          </div>
+        </DialogBody>
+        <DialogFooter className="justify-center gap-8">
+          <Button
+            size="lg"
+            className="flex gap-1 px-5"
+            onClick={() =>
+              handlePayment(PAYMENT_METHOD.CASH, selectedAppointment.id)
+            }
+          >
+            <p>Pay with cash</p>
+            <CurrencyDollarIcon className="w-5 h-5" />
+          </Button>
+          <Button
+            size="lg"
+            className="flex gap-2 px-5"
+            onClick={() =>
+              handlePayment(PAYMENT_METHOD.CARD, selectedAppointment.id)
+            }
+          >
+            <p>Pay with card</p>
+            <CreditCardIcon className="w-5 h-5" />
+          </Button>
+        </DialogFooter>
       </Dialog>
     );
   };
@@ -241,6 +387,22 @@ export default function ClientAppointmentTable() {
       getAppointmentList();
       currentPage.setValue(0);
     }
+  };
+
+  const handleSubmitFeedback = (feedback: string, rating: number) => {
+    if (!selectedAppointment) return;
+    sendFeedbackMiddleware(selectedAppointment.id, feedback, rating)
+      .then((res) => {
+        toast(<LabelNotification type="success" message="Success" />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
   };
   return (
     <Card className="w-full">
@@ -298,8 +460,8 @@ export default function ClientAppointmentTable() {
             </tr>
           </thead>
           <tbody>
-            {appoinments.map((item, index) => {
-              const isLast = index === appoinments.length - 1;
+            {appointments.map((item, index) => {
+              const isLast = index === appointments.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
@@ -354,13 +516,8 @@ export default function ClientAppointmentTable() {
                   {/* payment method */}
                   <td className={classes}>
                     <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                      {item.doctor.fullname === "visa" ? (
+                      {item.paymentMethod === PAYMENT_METHOD.CARD ? (
                         <CreditCardIcon className="h-full w-full object-contain p-1" />
-                      ) : item.doctor.fullname === "creditcard" ? (
-                        <CustomIcon
-                          src={PaypalIcon}
-                          className="h-full w-full object-contain p-1"
-                        />
                       ) : (
                         <CustomIcon
                           src={CodIcon}
@@ -384,7 +541,7 @@ export default function ClientAppointmentTable() {
                         variant="text"
                         onClick={() => {
                           setSelectedAppointment(item);
-                          openModal.setValue(true);
+                          openModalDetail.setValue(true);
                         }}
                       >
                         <EyeIcon className="h-5 w-5 text-gray-600" />
@@ -449,6 +606,12 @@ export default function ClientAppointmentTable() {
       </CardFooter>
       {renderCreateModal()}
       {renderModalDetail()}
+      {renderModalCheckout()}
+      <FeedbackModal
+        onOpenModal={openFeedbackModal}
+        onCloseModal={() => openFeedbackModal.setValue(false)}
+        onSubmit={handleSubmitFeedback}
+      />
     </Card>
   );
 }

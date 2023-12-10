@@ -1,3 +1,13 @@
+import { UserInfo } from "@app/pages/auth/types";
+export interface ReviewDetail {
+  appointmentId: string;
+  client: UserInfo;
+  review: {
+    createdAt: string;
+    rating: number;
+    feedback: string;
+  };
+}
 export interface DoctorDetail {
   id: string;
   fullname: string;
@@ -9,6 +19,9 @@ export interface DoctorDetail {
   feePerHour: number;
   cv: string;
   sex: string;
+  averageRating: number;
+
+  reviews: ReviewDetail[];
 }
 export const defaultDoctorDetail: DoctorDetail = {
   id: "",
@@ -21,6 +34,8 @@ export const defaultDoctorDetail: DoctorDetail = {
   avatar: "",
   cv: "",
   sex: "male",
+  averageRating: 0,
+  reviews: [],
 };
 
 export interface DoctorFilter {

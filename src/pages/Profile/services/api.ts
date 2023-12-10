@@ -39,17 +39,20 @@ export const charge = async (paymentMethodId: string, amount = 100) => {
   return res.data;
 };
 
-export const getCreditCardsMiddleware = async (
-  customerId: string
-): Promise<CreditCardProps[]> => {
-  const res = await Axios.get(`/stripe/credit-cards/${customerId}`);
-  const result: CreditCardProps[] = res.data.data.map((creditCard: any) => {
+export const getCreditCardsMiddleware = async (): Promise<
+  CreditCardProps[]
+> => {
+  const res = await Axios.get(`/credit-card`);
+  console.log(res.data);
+
+  const result: CreditCardProps[] = res.data.map((creditCard: any) => {
     return {
-      paymentMethodId: creditCard.id,
-      exp_month: creditCard.card.exp_month,
-      exp_year: creditCard.card.exp_year,
-      last_4_number: creditCard.card.last4,
-      brand: creditCard.card.brand,
+      paymentMethodId: creditCard.paymentMethodId,
+      exp_month: creditCard.stripeInfor.card.exp_month,
+      exp_year: creditCard.stripeInfor.card.exp_year,
+      last_4_number: creditCard.stripeInfor.card.last4,
+      brand: creditCard.stripeInfor.card.brand,
+      isMain: creditCard.isMain,
     };
   });
   return result;

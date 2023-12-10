@@ -46,7 +46,7 @@ const DoctorCard = (props: DoctorCardProps) => {
             <Typography color="blue">Doctor</Typography>
             <div>
               <Rating
-                value={4}
+                value={Math.round(doctorDetail.averageRating)}
                 unratedColor="amber"
                 ratedColor="amber"
                 readonly
@@ -55,7 +55,7 @@ const DoctorCard = (props: DoctorCardProps) => {
                 color="blue-gray"
                 className="font-medium text-blue-gray-500"
               >
-                Based on 134 Reviews
+                Based on {doctorDetail.reviews.length} Reviews
               </Typography>
             </div>
           </div>

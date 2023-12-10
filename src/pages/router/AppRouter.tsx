@@ -19,6 +19,8 @@ import { setupInterceptors } from "@app/services/axios";
 import PublicRoute from "./PublicRoute";
 import Charades from "../games/Charades";
 import VerifyEmail from "../auth/VerifyEmail";
+import LandingPage from "../Landing/LandingPage";
+import PublicDoctors from "../Landing/PublicDoctors";
 
 setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
@@ -40,6 +42,8 @@ export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/public/doctors" element={<PublicDoctors />} />
         <Route path="/auth" element={publicLayout}>
           <Route path="login" index element={<Login />} />
           <Route path="sign-up" element={<SignUp />} />
@@ -47,7 +51,6 @@ export const AppRouter: React.FC = () => {
           <Route path="confirm-email" element={<ConfirmEmail />} />
           <Route path="verify-email" element={<VerifyEmail />} />
         </Route>
-        <Route path="/landing" element={<Charades />} />
 
         <Route path={"error/404"} element={<NotFound />} />
 

@@ -6,7 +6,7 @@ import { isLogin } from "@app/config/enviroments";
 import { WithChildrenProps } from "@app/types";
 
 const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
-  return isLogin() ? <>{children}</> : <Navigate to="/auth/login" replace />;
+  return isLogin() ? <>{children}</> : <Navigate to="/landing" replace />;
 };
 
 export default RequireAuth;

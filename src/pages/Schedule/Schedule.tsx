@@ -13,11 +13,17 @@ import {
 } from "../appointment/types";
 import moment from "moment";
 import { EventContentArg } from "@fullcalendar/core";
+import { useBoolean } from "@app/helpers/hooks";
+import AppointmentDetailModal from "../appointment/Modal/AppoimentDetailModal";
+import { renderColor } from "@app/components/StatusLable/AppointmentStatusLable";
 let todayStr = new Date().toISOString().replace(/T.*$/, "");
 const Schedule = () => {
   const [appointments, setAppointments] = useState<DoctorAppoinmentDetail[]>(
     []
   );
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<DoctorAppoinmentDetail>();
+  const openModal = useBoolean();
   useEffect(() => {
     getAppointmentList();
   }, []);
@@ -34,49 +40,71 @@ const Schedule = () => {
         );
       });
   };
-  const date = new Date();
-  date.setHours(date.getHours() + 1);
-  function renderEventContent(eventInfo) {
-    console.log(eventInfo);
-
+  function renderEventContent(eventInfo: EventContentArg) {
+    const bg = eventInfo.backgroundColor;
     return (
-      <div>
-        <b>{eventInfo.timeText}</b>
+      <div
+        className={`h-fit overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer rounded-md`}
+        style={{
+          backgroundColor: bg || "blueviolet",
+        }}
+      >
+        <p>{eventInfo.timeText}</p>
         <i>{eventInfo.event.title}</i>
       </div>
     );
   }
   return (
-    <FullCalendar
-      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-      initialView="timeGridWeek"
-      headerToolbar={{
-        // left: "myCustomButton prev,today,next",
-        left: "prev,today,next",
-        center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay",
-      }}
-      events={appointments.map((appointment) => {
-        return {
-          id: appointment.id,
-          start: new Date(appointment.startTime),
-          end: new Date(appointment.endTime),
-          title: `Appointment with ${appointment.client.fullname}`,
-          color:
-            appointment.status === APPOINTMENT_STATUS.FINISHED
-              ? "green"
-              : "red",
-        };
-      })}
-      buttonText={{
-        today: "current",
-        month: "month",
-        week: "week",
-        day: "day",
-        list: "list",
-      }}
-      // eventContent={renderEventContent}
-    />
+    <>
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="timeGridWeek"
+        headerToolbar={{
+          // left: "myCustomButton prev,today,next",
+          left: "prev,today,next",
+          center: "title",
+          right: "dayGridMonth,timeGridWeek,timeGridDay",
+        }}
+        events={appointments.map((appointment) => {
+          return {
+            id: appointment.id,
+            start: moment(appointment.startTime).toDate(),
+            end: moment(appointment.endTime).toDate(),
+            title: `Appointment with ${appointment.client.fullname}`,
+            color:
+              appointment.status === APPOINTMENT_STATUS.PENDING
+                ? "#fdd835"
+                : appointment.status === APPOINTMENT_STATUS.APPROVED
+                ? "#1e88e5"
+                : appointment.status === APPOINTMENT_STATUS.FINISHED
+                ? "#43a047"
+                : "#e53935",
+          };
+        })}
+        eventClick={(event) => {
+          const selectedAppointment = appointments.find(
+            (item) => item.id === event.event.id
+          );
+          if (!selectedAppointment) return;
+          setSelectedAppointment(selectedAppointment);
+          openModal.setValue(true);
+        }}
+        buttonText={{
+          today: "current",
+          month: "month",
+          week: "week",
+          day: "day",
+          list: "list",
+        }}
+        eventContent={renderEventContent}
+      />
+      {selectedAppointment && (
+        <AppointmentDetailModal
+          appointmentDetail={selectedAppointment}
+          openModal={openModal}
+        />
+      )}
+    </>
   );
 };
 

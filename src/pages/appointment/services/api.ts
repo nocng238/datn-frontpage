@@ -1,16 +1,17 @@
 import axios from "axios";
 import {
   AppointmentFilter,
-  ClientAppointMentDetail,
+  ClientAppointmentDetail,
   CreateAppointmentRequest,
   DoctorAppoinmentDetail,
+  PAYMENT_METHOD,
 } from "../types";
 import { Pagination } from "@app/types";
 
 export const createAppointmentMiddleware = async (
   appointmentInfo: CreateAppointmentRequest
 ) => {
-  const res = await axios.post<ClientAppointMentDetail>(
+  const res = await axios.post<ClientAppointmentDetail>(
     "/appointment",
     appointmentInfo
   );
@@ -20,7 +21,7 @@ export const getListAppointmentForClient = async (
   filter?: AppointmentFilter
 ) => {
   const res = await axios.get<{
-    items: ClientAppointMentDetail[];
+    items: ClientAppointmentDetail[];
     meta: Pagination;
   }>("/appointment", {
     params: {
@@ -72,5 +73,22 @@ export const finishAppointmentByDoctorMiddleware = async (
   appointmentId: string
 ) => {
   const res = await axios.put(`/appointment/finish/${appointmentId}`);
+  return res.data;
+};
+
+export const paymentMiddleware = async (
+  paymentMethod: PAYMENT_METHOD,
+  appointmentId: string
+) => {
+  const res = await axios.post("/payment", { appointmentId, paymentMethod });
+  return res.data;
+};
+
+export const sendFeedbackMiddleware = async (
+  appointmentId: string,
+  feedback: string,
+  rating: number
+) => {
+  const res = await axios.post("/review", { appointmentId, feedback, rating });
   return res.data;
 };

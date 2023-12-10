@@ -5,6 +5,7 @@ import {
   EyeIcon,
   XCircleIcon,
   CalendarIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/solid";
 import NoteIcon from "@app/assets/icons/icon-note.svg";
 import ApproveAppointment from "@app/assets/icons/icon-approve-appointment.svg";
@@ -33,7 +34,11 @@ import InputDefault from "@app/components/Input/InputDefault";
 import PaymentStatusLable from "@app/components/StatusLable/PaymentStatus";
 import AppointmentStatus from "@app/components/StatusLable/AppointmentStatus";
 import { useEffect, useState } from "react";
-import { APPOINTMENT_STATUS, DoctorAppoinmentDetail } from "./types";
+import {
+  APPOINTMENT_STATUS,
+  DoctorAppoinmentDetail,
+  PAYMENT_METHOD,
+} from "./types";
 import {
   approveAppointment,
   cancelAppointmentByDoctorMiddleware,
@@ -460,18 +465,10 @@ export default function DoctorAppointmentTable() {
                       </td>
                       <td className={classes}>
                         <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                          {appointment.id === "visa" ? (
+                          {appointment.paymentMethod === PAYMENT_METHOD.CARD ? (
                             <CreditCardIcon className="h-full w-full object-contain p-1" />
-                          ) : appointment.id === "creditcard" ? (
-                            <CustomIcon
-                              src={PaypalIcon}
-                              className="h-full w-full object-contain p-1"
-                            />
                           ) : (
-                            <CustomIcon
-                              src={CodIcon}
-                              className="h-full w-full object-contain p-1"
-                            />
+                            <BanknotesIcon className="h-full w-full object-contain p-1" />
                           )}
                         </div>
                       </td>

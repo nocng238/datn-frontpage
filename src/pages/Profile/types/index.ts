@@ -15,6 +15,7 @@ export interface CreditCardProps {
   last_4_number: string;
   brand: CREDIT_BRAND;
   paymentMethodId: string;
+  isMain: boolean;
 }
 export const defaultCreditCard: CreditCardProps = {
   exp_month: "",
@@ -22,6 +23,7 @@ export const defaultCreditCard: CreditCardProps = {
   last_4_number: "",
   brand: CREDIT_BRAND.VISA,
   paymentMethodId: "",
+  isMain: false,
 };
 export interface ChangePasswordRequest {
   oldPassword: string;

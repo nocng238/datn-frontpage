@@ -2,17 +2,7 @@ import { useEffect, useState } from "react";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import { CreditCardProps, defaultCreditCard } from "./types";
-import {
-  Button,
-  Card,
-  Dialog,
-  Popover,
-  PopoverContent,
-  PopoverHandler,
-  Typography,
-  List,
-  ListItem,
-} from "@material-tailwind/react";
+import { Button, Card, Dialog, Typography } from "@material-tailwind/react";
 import { useBoolean } from "@app/helpers/hooks";
 import AddCreditCardModal from "./payment/AddCreditCardModal";
 import { Elements, ElementsConsumer } from "@stripe/react-stripe-js";
@@ -42,12 +32,13 @@ const PaymentSetting = (props: Props) => {
     if (!user.stripeCustomerId) {
       return;
     }
-    getCreditCardsMiddleware(user.stripeCustomerId || "")
+    getCreditCardsMiddleware()
       .then((res) => {
-        setCreditCards(res);
+        setCreditCards(res.filter((creditCard) => !creditCard.isMain));
+        setMainCreditCard(res.find((item) => item.isMain) || defaultCreditCard);
       })
       .catch((error) => {
-        console.log(error.response.data.message);
+        console.log(error);
       });
   };
   const onAddCreditCard = () => {
@@ -61,7 +52,20 @@ const PaymentSetting = (props: Props) => {
     setMainCreditCard(creditCard);
   };
   return (
-    <Card className="credit-card-setting w-full h-full p-4 ">
+    <Card className="credit-card-setting w-full h-full p-4 justify-start ">
+      <Typography
+        varient="h4"
+        className="font-bold mb-5 text-lg"
+        color="blue-gray"
+      >
+        Main Credit Card
+      </Typography>
+      <div className="relative flex justify-start pb-4">
+        <CreditCard
+          creditCardDetail={mainCreditCard}
+          onRemoveCard={onRemoveCard}
+        />
+      </div>
       <Typography
         varient="h4"
         className="font-bold mb-5 text-lg"
@@ -82,7 +86,7 @@ const PaymentSetting = (props: Props) => {
         })}
       </div>
       <Button
-        className="my-10 w-44"
+        className="my-8 w-44"
         variant="outlined"
         onClick={() => {
           openAddCreditCardModal.setValue(true);

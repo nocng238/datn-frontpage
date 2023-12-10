@@ -22,6 +22,7 @@ import { defaultAvatar } from "@app/constants/data";
 import CustomIcon from "@app/components/CustomIcon/CustomIcon";
 import IconGender from "@app/assets/icons/icon-gender.svg";
 import { useNavigate } from "react-router-dom";
+import ReviewCard from "../appointment/molecules/ReviewCard";
 interface DoctorModalProps {
   openModal: IUseDefaultValueProps;
   doctorDetail: DoctorDetail;
@@ -71,8 +72,8 @@ const DoctorModal = (props: DoctorModalProps) => {
         </div>
       </DialogHeader>
       <DialogBody>
-        <div className="w-full flex rounded-lg ">
-          <div className="w-[50%] flex flex-col gap-3 overflow-auto">
+        <div className="w-full flex rounded-lg h-full ">
+          <div className="w-[50%] flex flex-col gap-3 overflow-auto max-h-[70vh]">
             <div className="flex gap-2 items-center">
               <CustomIcon src={IconGender} />
               <Typography
@@ -123,10 +124,15 @@ const DoctorModal = (props: DoctorModalProps) => {
                 {doctorDetail.feePerHour}$
               </Typography>
             </div>
-            <div>
+            <div className="px-4">
               <Typography variant="h4" color="black" className="text-center">
                 Customer reviews
               </Typography>
+              <div className="flex flex-col gap-3">
+                {doctorDetail.reviews.map((item) => {
+                  return <ReviewCard reviewDetail={item} />;
+                })}
+              </div>
             </div>
           </div>
 
@@ -140,16 +146,19 @@ const DoctorModal = (props: DoctorModalProps) => {
         <div className="flex items-center gap-16">
           <div className="flex flex-col gap-1">
             <Typography variant="small" color="gray" className="font-normal">
-              Rating (4.7 out of 5)
+              Rating ({doctorDetail.averageRating} out of 5)
             </Typography>
-            <Rating value={4} readonly></Rating>
+            <Rating
+              value={Math.round(doctorDetail.averageRating)}
+              readonly
+            ></Rating>
           </div>
           <div>
             <Typography variant="small" color="gray" className="font-normal">
               Reviews
             </Typography>
             <Typography color="blue-gray" className="font-medium">
-              44,082,044
+              {doctorDetail.reviews.length}
             </Typography>
           </div>
           <div>

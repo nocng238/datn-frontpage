@@ -85,6 +85,9 @@ export default withMT({
         "auto-fill-min-350": "repeat(auto-fill, minmax(350px, 1fr))",
       },
     },
+    fontFamily: {
+      "black-han-sans": ["Black Han Sans", "sans-serif"],
+    },
     // fontFamily: {
     //   sans: ["Open Sans", "sans-serif"],
     // },

@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
 import { useString } from "@app/helpers/hooks";
-import { ClientAppointMentDetail, CreateAppointmentRequest } from "./types";
+import { ClientAppointmentDetail, CreateAppointmentRequest } from "./types";
 import { createAppointmentMiddleware } from "./services/api";
 interface Props {
   onCloseModal: () => void;

@@ -6,11 +6,8 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import { PowerIcon } from "@heroicons/react/24/solid";
-import DoctorIcon from "@app/assets/icons/icon-doctor.svg";
 import Logo from "@app/assets/images/logo.jpg";
-import { PATH } from "@app/constants/path";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { avatar } from "@app/constants/data";
 import { MENU } from "./constant/sidebarConstant";
 import { useAppSelector } from "@app/hooks/useApp";
 const CLIENT_MENU = [MENU.APPOINMENT, MENU.DOCTOR, MENU.PROFILE, MENU.SETTING];

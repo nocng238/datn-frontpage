@@ -6,21 +6,22 @@ import IconActive from "@app/assets/icons/icon-active.svg";
 interface Props {
   status: APPOINTMENT_STATUS;
 }
+export const renderColor = (status: APPOINTMENT_STATUS) => {
+  if (
+    status === APPOINTMENT_STATUS.APPROVED ||
+    status === APPOINTMENT_STATUS.FINISHED
+  )
+    return "green";
+  if (
+    status === APPOINTMENT_STATUS.REJECTED ||
+    status === APPOINTMENT_STATUS.CANCEL
+  )
+    return "red";
+  return "amber";
+};
 const AppoinmentStatusLable = (props: Props) => {
   const { status } = props;
-  const renderColor = () => {
-    if (
-      status === APPOINTMENT_STATUS.APPROVED ||
-      status === APPOINTMENT_STATUS.FINISHED
-    )
-      return "green";
-    if (
-      status === APPOINTMENT_STATUS.REJECTED ||
-      status === APPOINTMENT_STATUS.CANCEL
-    )
-      return "red";
-    return "amber";
-  };
+
   const renderIcon = () => {
     console.log(status);
 
@@ -91,7 +92,7 @@ const AppoinmentStatusLable = (props: Props) => {
   return (
     <div className="flex items-center gap-2">
       {renderIcon()}
-      <Typography className="font-normal" color={renderColor()}>
+      <Typography className="font-normal" color={renderColor(status)}>
         This appoinment is {status.toLocaleLowerCase()}
       </Typography>
     </div>
