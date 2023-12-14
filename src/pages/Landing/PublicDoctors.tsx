@@ -38,8 +38,8 @@ const PublicDoctors = () => {
     const filter: DoctorFilter = {
       search: search.value,
       address,
-      startTime: "",
-      endTime: "",
+      // startTime: "",
+      // endTime: "",
     };
     return filter;
   };

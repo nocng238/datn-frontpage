@@ -47,6 +47,7 @@ export const getCreditCardsMiddleware = async (): Promise<
 
   const result: CreditCardProps[] = res.data.map((creditCard: any) => {
     return {
+      id: creditCard.id,
       paymentMethodId: creditCard.paymentMethodId,
       exp_month: creditCard.stripeInfor.card.exp_month,
       exp_year: creditCard.stripeInfor.card.exp_year,
@@ -62,5 +63,15 @@ export const changePasswordMiddleware = async (
   request: ChangePasswordRequest
 ) => {
   const res = await Axios.put("/change-password", request);
+  return res.data;
+};
+
+export const updateMainCreditCard = async (id: string) => {
+  const res = await Axios.put(`/credit-card/main/${id}`);
+  return res.data;
+};
+
+export const deleteCreditCard = async (id: string) => {
+  const res = await Axios.delete(`/credit-card/${id}`);
   return res.data;
 };

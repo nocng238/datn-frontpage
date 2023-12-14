@@ -1,4 +1,4 @@
-import { UserInfo } from "@app/pages/auth/types";
+import { UserInfo, defaultUser } from "@app/pages/auth/types";
 export interface ReviewDetail {
   appointmentId: string;
   client: UserInfo;
@@ -8,6 +8,15 @@ export interface ReviewDetail {
     feedback: string;
   };
 }
+export const reviewDefault: ReviewDetail = {
+  appointmentId: "",
+  client: defaultUser,
+  review: {
+    createdAt: "",
+    rating: 1,
+    feedback: "",
+  },
+};
 export interface DoctorDetail {
   id: string;
   fullname: string;

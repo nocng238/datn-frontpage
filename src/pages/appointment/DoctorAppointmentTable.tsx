@@ -236,7 +236,10 @@ export default function DoctorAppointmentTable() {
               </div>
             </div>
           </div>
-          <AppoinmentStatusLable status={selectedAppointment.status} />
+          <AppoinmentStatusLable
+            status={selectedAppointment.status}
+            time={selectedAppointment.updatedAt}
+          />
           <div className="flex gap-2 items-center mt-4">
             <Avatar
               src={selectedAppointment.client.avatar}
@@ -275,6 +278,20 @@ export default function DoctorAppointmentTable() {
               <Textarea value={selectedAppointment.note} disabled />
             </div>
           </div>
+          <ReasonModal
+            onSubmit={onSubmitCancel}
+            onOpenModal={openConfirmCancelModal}
+            onCloseModal={() => {
+              openModal.setValue(true);
+            }}
+          />
+          <ReasonModal
+            onSubmit={onSubmitRejected}
+            onOpenModal={openConfirmRejectModal}
+            onCloseModal={() => {
+              openModal.setValue(true);
+            }}
+          />
         </DialogBody>
         {(selectedAppointment.status === APPOINTMENT_STATUS.PENDING ||
           selectedAppointment.status === APPOINTMENT_STATUS.APPROVED) && (
@@ -284,14 +301,14 @@ export default function DoctorAppointmentTable() {
                 {compareDate(
                   today.toLocaleString(),
                   selectedAppointment.startTime
-                ) > 0 ? (
+                ) < 0 ? (
                   <Button
                     size="md"
                     variant="gradient"
                     color="red"
                     onClick={() => {
                       openConfirmCancelModal.setValue(true);
-                      openModal.setValue(false);
+                      // openModal.setValue(false);
                     }}
                   >
                     Cancel
@@ -304,7 +321,7 @@ export default function DoctorAppointmentTable() {
                       color="red"
                       onClick={() => {
                         openConfirmCancelModal.setValue(true);
-                        openModal.setValue(false);
+                        // openModal.setValue(false);
                       }}
                     >
                       No show
@@ -554,20 +571,6 @@ export default function DoctorAppointmentTable() {
       )}
 
       {renderModalDetail()}
-      <ReasonModal
-        onSubmit={onSubmitRejected}
-        onOpenModal={openConfirmRejectModal}
-        onCloseModal={() => {
-          openModal.setValue(true);
-        }}
-      />
-      <ReasonModal
-        onSubmit={onSubmitCancel}
-        onOpenModal={openConfirmCancelModal}
-        onCloseModal={() => {
-          openModal.setValue(true);
-        }}
-      />
     </Card>
   );
 }

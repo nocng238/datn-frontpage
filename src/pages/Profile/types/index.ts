@@ -1,5 +1,3 @@
-import { Focused } from "react-credit-cards";
-
 export enum PROFILE_TAB {
   INFO = "info",
   SETTING = "setting",
@@ -16,6 +14,7 @@ export interface CreditCardProps {
   brand: CREDIT_BRAND;
   paymentMethodId: string;
   isMain: boolean;
+  id: string;
 }
 export const defaultCreditCard: CreditCardProps = {
   exp_month: "",
@@ -24,6 +23,7 @@ export const defaultCreditCard: CreditCardProps = {
   brand: CREDIT_BRAND.VISA,
   paymentMethodId: "",
   isMain: false,
+  id: "",
 };
 export interface ChangePasswordRequest {
   oldPassword: string;

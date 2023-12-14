@@ -10,9 +10,16 @@ import { loadStripe } from "@stripe/stripe-js";
 import { STRIPE_PUBLIC_KEY } from "@app/config/enviroments";
 import AddCreditCardStripe from "./payment/AddCreditCardStripe";
 import CreditCard from "./payment/CreditCard";
-import { getCreditCardsMiddleware } from "./services/api";
+import {
+  deleteCreditCard,
+  getCreditCardsMiddleware,
+  updateMainCreditCard,
+} from "./services/api";
 import { useAppSelector } from "@app/hooks/useApp";
 import { UserInfo } from "../auth/types";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
+import { MESSAGE } from "@app/constants/message";
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 interface Props {
   user: UserInfo;
@@ -45,27 +52,57 @@ const PaymentSetting = (props: Props) => {
     getCreditCards();
     openAddCreditCardModal.setValue(false);
   };
-  const onRemoveCard = (paymentMethodId: string) => {
-    // const newCreditCards = creditCards.filter(item => item.id !== cardId)
+  const onRemoveCard = (creditCardId: string) => {
+    deleteCreditCard(creditCardId)
+      .then((_res) => {
+        getCreditCards();
+        toast(<LabelNotification type="success" message="Success" />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
   };
   const handleSelectPrimaryCard = (creditCard: CreditCardProps) => {
-    setMainCreditCard(creditCard);
+    updateMainCreditCard(creditCard.id)
+      .then((_res) => {
+        // setMainCreditCard(creditCard);
+        getCreditCards();
+
+        toast(<LabelNotification type="success" message="Success" />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
   };
   return (
     <Card className="credit-card-setting w-full h-full p-4 justify-start ">
-      <Typography
-        varient="h4"
-        className="font-bold mb-5 text-lg"
-        color="blue-gray"
-      >
-        Main Credit Card
-      </Typography>
-      <div className="relative flex justify-start pb-4">
-        <CreditCard
-          creditCardDetail={mainCreditCard}
-          onRemoveCard={onRemoveCard}
-        />
-      </div>
+      {mainCreditCard.paymentMethodId && (
+        <>
+          <Typography
+            varient="h4"
+            className="font-bold mb-5 text-lg"
+            color="blue-gray"
+          >
+            Main Credit Card
+          </Typography>
+          <div className="relative flex justify-start pb-4">
+            <CreditCard
+              creditCardDetail={mainCreditCard}
+              onRemoveCard={onRemoveCard}
+            />
+          </div>
+        </>
+      )}
       <Typography
         varient="h4"
         className="font-bold mb-5 text-lg"
@@ -73,13 +110,14 @@ const PaymentSetting = (props: Props) => {
       >
         Payment methods
       </Typography>
-      <div className=" grid grid-cols-3 gap-10">
+      <div className="grid grid-cols-3 gap-10">
         {creditCards.map((creditCard) => {
           return (
             <div className="relative">
               <CreditCard
                 creditCardDetail={creditCard}
                 onRemoveCard={onRemoveCard}
+                handleSelectPrimaryCard={handleSelectPrimaryCard}
               />
             </div>
           );

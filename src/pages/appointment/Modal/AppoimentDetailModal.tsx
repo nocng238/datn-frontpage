@@ -22,7 +22,9 @@ const AppointmentDetailModal = (props: Props) => {
       size="sm"
       className="p-6 z-40"
       open={openModal.value}
-      handler={() => {}}
+      handler={() => {
+        openModal.setValue(false);
+      }}
     >
       <DialogHeader className="flex flex-col w-full items-start">
         <div className="w-full">
@@ -38,7 +40,10 @@ const AppointmentDetailModal = (props: Props) => {
             </div>
           </div>
         </div>
-        <AppoinmentStatusLable status={appointmentDetail.status} />
+        <AppoinmentStatusLable
+          status={appointmentDetail.status}
+          time={appointmentDetail.updatedAt}
+        />
         <div className="flex gap-2 items-center mt-4">
           <Avatar
             src={appointmentDetail.client.avatar}

@@ -9,6 +9,7 @@ import {
   InboxIcon,
   PowerIcon,
   CalendarDaysIcon,
+  ClockIcon,
 } from "@heroicons/react/24/solid";
 export const MENU = {
   DASHBOARD: {
@@ -19,7 +20,7 @@ export const MENU = {
   SCHEDULE: {
     title: "Schedule",
     path: "/schedule",
-    icon: <ShoppingBagIcon className="h-5 w-5" />,
+    icon: <ClockIcon className="h-5 w-5" />,
   },
   INBOX: {
     title: "Inbox",

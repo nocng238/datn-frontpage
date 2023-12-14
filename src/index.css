@@ -36,3 +36,6 @@
 .color-icon-abandoned svg path[stroke] {
   stroke: #ea4545;
 }
+.fc-direction-ltr {
+  height: 100%;
+}

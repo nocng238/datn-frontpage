@@ -25,6 +25,11 @@ const ReasonModal = (props: Props) => {
       size="sm"
       className="z-[1000000000000]"
     >
+      <DialogHeader>
+        <Typography variant="h5" color="blue-gray">
+          Confirmation
+        </Typography>
+      </DialogHeader>
       <DialogBody>
         <Textarea
           label="Reason"

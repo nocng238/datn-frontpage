@@ -2,9 +2,12 @@ import { APPOINTMENT_STATUS } from "@app/pages/appointment/types";
 import CustomIcon from "../CustomIcon/CustomIcon";
 import { Typography } from "@material-tailwind/react";
 import IconActive from "@app/assets/icons/icon-active.svg";
+import moment from "moment";
+import { formatDate } from "@app/helpers/utils";
 
 interface Props {
   status: APPOINTMENT_STATUS;
+  time: string;
 }
 export const renderColor = (status: APPOINTMENT_STATUS) => {
   if (
@@ -20,7 +23,7 @@ export const renderColor = (status: APPOINTMENT_STATUS) => {
   return "amber";
 };
 const AppoinmentStatusLable = (props: Props) => {
-  const { status } = props;
+  const { status, time } = props;
 
   const renderIcon = () => {
     console.log(status);
@@ -90,12 +93,17 @@ const AppoinmentStatusLable = (props: Props) => {
     );
   };
   return (
-    <div className="flex items-center gap-2">
-      {renderIcon()}
-      <Typography className="font-normal" color={renderColor(status)}>
-        This appoinment is {status.toLocaleLowerCase()}
+    <>
+      <div className="flex items-center gap-2">
+        {renderIcon()}
+        <Typography className="font-normal" color={renderColor(status)}>
+          This appoinment is {status.toLocaleLowerCase()}
+        </Typography>
+      </div>
+      <Typography className="font-medium ml-8" color={renderColor(status)}>
+        at {formatDate(time)}
       </Typography>
-    </div>
+    </>
   );
 };
 export default AppoinmentStatusLable;

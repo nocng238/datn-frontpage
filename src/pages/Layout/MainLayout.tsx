@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { PATH } from "@app/constants/path";
 import Profile from "../Profile/Profile";
@@ -12,6 +12,7 @@ import { defaultUser } from "../auth/types";
 import { setUserInfoAction } from "../auth/stores/actions";
 import { configureStore } from "@app/stores/configureStore";
 import { getMe } from "./services/api";
+import DoctorDashBoard from "../DashBoard/DoctorDashBoard";
 
 const MainLayout = () => {
   const user = useAppSelector((state) => state.userInfo);
@@ -35,10 +36,12 @@ const MainLayout = () => {
         {/* <Outlet /> */}
         {user.id && (
           <Routes>
-            <Route path={PATH.profile} index element={<Profile />} />
+            <Route path={PATH.profile} element={<Profile />} />
             <Route path={PATH.doctor} element={<DoctorPage />} />
             <Route path={PATH.appointment} element={<Appointment />} />
             <Route path={"/schedule"} element={<Schedule />} />
+            <Route path={"/dashboard"} element={<DoctorDashBoard />} />
+            <Route index element={<Navigate to={PATH.profile} />} />
             {/* <Route path="*" navi/> */}
           </Routes>
         )}

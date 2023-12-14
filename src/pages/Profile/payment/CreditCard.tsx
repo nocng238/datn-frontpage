@@ -6,6 +6,10 @@ import { useBoolean } from "@app/helpers/hooks";
 import {
   List,
   ListItem,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
   Popover,
   PopoverContent,
   PopoverHandler,
@@ -15,39 +19,45 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 interface Props {
   creditCardDetail: CreditCardProps;
   onRemoveCard: (paymentMethodId: string) => void;
+  handleSelectPrimaryCard?: (creditCard: CreditCardProps) => void;
 }
 const CreditCard = (props: Props) => {
   const user = useAppSelector((state) => state.userInfo);
   const openSelectCardOption = useBoolean();
-  const { creditCardDetail, onRemoveCard } = props;
+  const { creditCardDetail, onRemoveCard, handleSelectPrimaryCard } = props;
   return (
     <div className="flex flex-col relative justify-center items-center">
-      <div className="absolute top-2 right-2 z-40 cursor-pointer">
-        <Popover
-          open={openSelectCardOption.value}
-          placement="bottom-start"
-          handler={() => {
-            openSelectCardOption.setValue(!openSelectCardOption.value);
-          }}
-        >
-          <PopoverHandler>
-            <EllipsisHorizontalIcon className="w-7 h-7" />
-          </PopoverHandler>
-          <PopoverContent className="p-0">
-            <List className="min-w-0">
-              <ListItem
+      {handleSelectPrimaryCard && (
+        <div className="absolute top-2 right-4 z-40 cursor-pointer">
+          <Menu
+            open={openSelectCardOption.value}
+            placement="bottom-start"
+            handler={() => {
+              openSelectCardOption.setValue(!openSelectCardOption.value);
+            }}
+          >
+            <MenuHandler>
+              <EllipsisHorizontalIcon className="w-7 h-7" />
+            </MenuHandler>
+            <MenuList className="p-1">
+              <MenuItem
                 onClick={() => {
-                  onRemoveCard(creditCardDetail.paymentMethodId);
+                  onRemoveCard(creditCardDetail.id);
                 }}
               >
                 {" "}
                 Remove
-              </ListItem>
-              <ListItem className="font-light">Select as main card</ListItem>
-            </List>
-          </PopoverContent>
-        </Popover>
-      </div>
+              </MenuItem>
+              <MenuItem
+                className="font-light"
+                onClick={() => handleSelectPrimaryCard(creditCardDetail)}
+              >
+                Select as main card
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </div>
+      )}
       <div className="space-y-16">
         <div className="w-96 h-56 m-auto bg-red-100 rounded-xl relative text-white shadow-md transition-transform transform">
           <img

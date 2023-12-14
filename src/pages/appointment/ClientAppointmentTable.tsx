@@ -4,6 +4,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import {
+  BanknotesIcon,
   CalendarDaysIcon,
   CalendarIcon,
   ChevronDoubleLeftIcon,
@@ -58,7 +59,7 @@ import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
 import { formatDate } from "@app/helpers/utils";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
-import FeedbackModal from "./Modal/FeedBackModal";
+import FeedbackModal from "./Modal/FeedbackModal";
 
 const TABLE_HEAD = [
   "Doctor",
@@ -170,7 +171,7 @@ export default function ClientAppointmentTable() {
     return (
       <Dialog
         size="sm"
-        className="p-6 z-40"
+        className="p-6"
         open={openModalDetail.value}
         handler={() => {}}
       >
@@ -188,7 +189,10 @@ export default function ClientAppointmentTable() {
               </div>
             </div>
           </div>
-          <AppoinmentStatusLable status={selectedAppointment.status} />
+          <AppoinmentStatusLable
+            status={selectedAppointment.status}
+            time={selectedAppointment.updatedAt}
+          />
           <div className="flex gap-2 items-center mt-4">
             <Avatar
               src={selectedAppointment.doctor.avatar}
@@ -233,6 +237,14 @@ export default function ClientAppointmentTable() {
               <Textarea value={selectedAppointment.note} disabled />
             </div>
           </div>
+          {/* Sub modals */}
+          {renderModalCheckout()}
+          <FeedbackModal
+            onOpenModal={openFeedbackModal}
+            onCloseModal={() => openFeedbackModal.setValue(false)}
+            onSubmit={handleSubmitFeedback}
+          />
+          {/*  */}
         </DialogBody>
         {selectedAppointment.status !== APPOINTMENT_STATUS.CANCEL &&
           selectedAppointment.status !== APPOINTMENT_STATUS.REJECTED && (
@@ -257,28 +269,27 @@ export default function ClientAppointmentTable() {
                     variant="gradient"
                     color="indigo"
                     onClick={() => {
-                      // openConfirmCancelModal.setValue(true);
                       openCheckoutModal.setValue(true);
-                      openModalDetail.setValue(false);
                     }}
                   >
                     Checkout
                   </Button>
                 )}
-              {selectedAppointment.paymentStatus === PAYMENT_STATUS.PAID && (
-                <Button
-                  size="md"
-                  variant="gradient"
-                  color="indigo"
-                  onClick={() => {
-                    // openConfirmCancelModal.setValue(true);
-                    openFeedbackModal.setValue(true);
-                    openModalDetail.setValue(false);
-                  }}
-                >
-                  Review
-                </Button>
-              )}
+              {selectedAppointment.paymentStatus === PAYMENT_STATUS.PAID &&
+                !selectedAppointment.reviewId && (
+                  <Button
+                    size="md"
+                    variant="gradient"
+                    color="indigo"
+                    onClick={() => {
+                      // openConfirmCancelModal.setValue(true);
+                      openFeedbackModal.setValue(true);
+                      // openModalDetail.setValue(false);
+                    }}
+                  >
+                    Review
+                  </Button>
+                )}
             </DialogFooter>
           )}
       </Dialog>
@@ -289,9 +300,7 @@ export default function ClientAppointmentTable() {
     return (
       <Dialog
         open={openCheckoutModal.value}
-        handler={() => {
-          // openCheckoutModal.setValue(!openCheckoutModal.value);
-        }}
+        handler={() => {}}
         className="px-8"
         size="sm"
       >
@@ -300,7 +309,6 @@ export default function ClientAppointmentTable() {
             className="p-1 bg-gray-300 rounded-full cursor-pointer hover:bg-gray-500 text"
             onClick={() => {
               openCheckoutModal.setValue(false);
-              openModalDetail.setValue(true);
             }}
           >
             <ChevronLeftIcon className="w-5 h-5 text-blue " />
@@ -519,10 +527,7 @@ export default function ClientAppointmentTable() {
                       {item.paymentMethod === PAYMENT_METHOD.CARD ? (
                         <CreditCardIcon className="h-full w-full object-contain p-1" />
                       ) : (
-                        <CustomIcon
-                          src={CodIcon}
-                          className="h-full w-full object-contain p-1"
-                        />
+                        <BanknotesIcon className="h-full w-full object-contain p-1" />
                       )}
                     </div>
                   </td>
@@ -606,12 +611,6 @@ export default function ClientAppointmentTable() {
       </CardFooter>
       {renderCreateModal()}
       {renderModalDetail()}
-      {renderModalCheckout()}
-      <FeedbackModal
-        onOpenModal={openFeedbackModal}
-        onCloseModal={() => openFeedbackModal.setValue(false)}
-        onSubmit={handleSubmitFeedback}
-      />
     </Card>
   );
 }
