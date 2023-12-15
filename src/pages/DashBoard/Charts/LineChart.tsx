@@ -6,8 +6,10 @@ import {
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
-
-export default function LineChart() {
+interface Props {
+  data: number[];
+}
+export default function LineChart({ data }: Props) {
   const chartConfig = {
     type: "line",
     height: 240,
@@ -24,7 +26,7 @@ export default function LineChart() {
         },
       },
       title: {
-        show: "",
+        // show: "$",
       },
       dataLabels: {
         enabled: false,
@@ -55,6 +57,7 @@ export default function LineChart() {
         categories: [
           "Jan",
           "Feb",
+          "Mar",
           "Apr",
           "May",
           "Jun",
@@ -73,6 +76,9 @@ export default function LineChart() {
             fontSize: "12px",
             fontFamily: "inherit",
             fontWeight: 400,
+          },
+          formatter: (value: any) => {
+            return `${value} $`;
           },
         },
       },
@@ -111,7 +117,7 @@ export default function LineChart() {
         </div>
         <div>
           <Typography variant="h6" color="blue-gray">
-            Line Chart
+            Revenue Chart
           </Typography>
           <Typography
             variant="small"
@@ -124,7 +130,15 @@ export default function LineChart() {
         </div>
       </CardHeader>
       <CardBody className="px-2 pb-0">
-        <Chart {...chartConfig} />
+        <Chart
+          {...chartConfig}
+          series={[
+            {
+              name: "Revenue",
+              data,
+            },
+          ]}
+        />
       </CardBody>
     </Card>
   );

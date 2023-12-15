@@ -39,3 +39,11 @@
 .fc-direction-ltr {
   height: 100%;
 }
+
+.calendar_default_main {
+  height: 100%;
+}
+.calendar_default_main > div:nth-child(2) {
+  /* Your styles here */
+  height: 100% !important;
+}

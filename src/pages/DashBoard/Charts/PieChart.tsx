@@ -6,6 +6,8 @@ import {
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
+import { APPOINTMENT_STATUS } from "@app/pages/appointment/types";
+import { CalendarDaysIcon, CalendarIcon } from "@heroicons/react/24/solid";
 
 // If you're using Next.js please use the dynamic import for react-apexcharts and remove the import from the top for the react-apexcharts
 // import dynamic from "next/dynamic";
@@ -15,7 +17,7 @@ const chartConfig = {
   type: "pie",
   width: 280,
   height: 280,
-  series: [44, 55, 13, 43, 22],
+  series: [44, 55, 13, 43, 22, 12],
   options: {
     chart: {
       toolbar: {
@@ -25,19 +27,23 @@ const chartConfig = {
     title: {
       show: "Appoinment",
     },
-    labels: ["Jan", "Feb", "Apr", "May", "Jun"],
+    labels: Object.keys(APPOINTMENT_STATUS),
 
     dataLabels: {
       enabled: false,
     },
-    colors: ["#020617", "#ff8f00", "#00897b", "#1e88e5", "#d81b60"],
+    colors: ["#ff6f00", "#01579b", "#b71c1c", "#1b5e20", "#006064", "#1a237e"],
     legend: {
       show: false,
     },
   },
 };
+interface Props {
+  data: number[];
+}
 
-export default function PieChart() {
+export default function PieChart(props: Props) {
+  const { data } = props;
   return (
     <Card>
       <CardHeader
@@ -46,12 +52,12 @@ export default function PieChart() {
         color="transparent"
         className="flex flex-col gap-4 rounded-none md:flex-row md:items-center"
       >
-        <div className="w-max rounded-lg bg-gray-900 p-5 text-white">
-          <Square3Stack3DIcon className="h-6 w-6" />
+        <div className="w-max rounded-lg bg-gray-700 p-5 text-white">
+          <CalendarDaysIcon className="h-6 w-6" />
         </div>
         <div>
           <Typography variant="h6" color="blue-gray">
-            Pie Chart
+            Appointment Chart
           </Typography>
           <Typography
             variant="small"
@@ -64,7 +70,7 @@ export default function PieChart() {
         </div>
       </CardHeader>
       <CardBody className="mt-4 grid place-items-center px-2">
-        <Chart {...chartConfig} />
+        <Chart {...chartConfig} series={data} />
       </CardBody>
     </Card>
   );
