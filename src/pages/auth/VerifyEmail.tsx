@@ -16,19 +16,21 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "./services/api";
 
 const VerifyEmail = () => {
-  const isVerify = useBoolean();
+  const isVerify = useBoolean(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   useEffect(() => {
     const email = searchParams.get("email");
     const token = searchParams.get("token");
-    console.log(email);
-    console.log(token);
 
     if (!email || !token) return;
-    verifyEmail(email, token).then((res) => {
-      isVerify.setValue(true);
-    });
+    verifyEmail(email, token)
+      .then((_res) => {
+        isVerify.setValue(true);
+      })
+      .catch((_error) => {
+        isVerify.setValue(false);
+      });
   }, []);
   return (
     <Card className="w-96 bg-opacity-70">
