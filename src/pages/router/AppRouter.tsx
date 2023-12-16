@@ -26,9 +26,6 @@ setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
 
 export const AppRouter: React.FC = () => {
-  // useEffect(() => {
-  //   localStorage.setItem("access_token", "aasd");
-  // }, []);
   const protectedLayout = (
     <RequireAuth>
       <MainLayout />
@@ -51,14 +48,8 @@ export const AppRouter: React.FC = () => {
           <Route path="confirm-email" element={<ConfirmEmail />} />
           <Route path="verify-email" element={<VerifyEmail />} />
         </Route>
-
         <Route path={"error/404"} element={<NotFound />} />
-
         <Route path="/*" element={protectedLayout} />
-        {/* <Route path={PATH.profile} element={<Profile />} />
-          <Route path={PATH.doctor} element={<DoctorPage />} />
-          <Route path={PATH.appointment} element={<Appointment />} />
-          <Route path={"/schedule"} element={<Schedule />} /> */}
       </Routes>
     </BrowserRouter>
   );

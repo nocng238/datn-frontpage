@@ -20,6 +20,7 @@ import { UserInfo } from "../auth/types";
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
+import NoCreditCardComponent from "@app/components/EmptyState/NoCreditCard";
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 interface Props {
   user: UserInfo;
@@ -86,53 +87,63 @@ const PaymentSetting = (props: Props) => {
   };
   return (
     <Card className="credit-card-setting w-full h-full p-4 justify-start ">
-      {mainCreditCard.paymentMethodId && (
+      {creditCards.length ? (
         <>
+          {mainCreditCard.paymentMethodId && (
+            <>
+              <Typography
+                varient="h4"
+                className="font-bold mb-5 text-lg"
+                color="blue-gray"
+              >
+                Main Credit Card
+              </Typography>
+              <div className="relative flex justify-start pb-4">
+                <CreditCard
+                  creditCardDetail={mainCreditCard}
+                  onRemoveCard={onRemoveCard}
+                />
+              </div>
+            </>
+          )}
           <Typography
             varient="h4"
             className="font-bold mb-5 text-lg"
             color="blue-gray"
           >
-            Main Credit Card
+            Payment methods
           </Typography>
-          <div className="relative flex justify-start pb-4">
-            <CreditCard
-              creditCardDetail={mainCreditCard}
-              onRemoveCard={onRemoveCard}
-            />
+          <div className="grid grid-cols-3 gap-10">
+            {creditCards.map((creditCard) => {
+              return (
+                <div className="relative">
+                  <CreditCard
+                    creditCardDetail={creditCard}
+                    onRemoveCard={onRemoveCard}
+                    handleSelectPrimaryCard={handleSelectPrimaryCard}
+                  />
+                </div>
+              );
+            })}
           </div>
+          <Button
+            className="my-8 w-44"
+            variant="outlined"
+            onClick={() => {
+              openAddCreditCardModal.setValue(true);
+            }}
+          >
+            {" "}
+            Add credit card
+          </Button>
         </>
+      ) : (
+        <div className="flex justify-around">
+          <NoCreditCardComponent
+            onCreateCreditCard={() => openAddCreditCardModal.setValue(true)}
+          />
+        </div>
       )}
-      <Typography
-        varient="h4"
-        className="font-bold mb-5 text-lg"
-        color="blue-gray"
-      >
-        Payment methods
-      </Typography>
-      <div className="grid grid-cols-3 gap-10">
-        {creditCards.map((creditCard) => {
-          return (
-            <div className="relative">
-              <CreditCard
-                creditCardDetail={creditCard}
-                onRemoveCard={onRemoveCard}
-                handleSelectPrimaryCard={handleSelectPrimaryCard}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <Button
-        className="my-8 w-44"
-        variant="outlined"
-        onClick={() => {
-          openAddCreditCardModal.setValue(true);
-        }}
-      >
-        {" "}
-        Add credit card
-      </Button>
       <Dialog
         size="xs"
         className="w-96"

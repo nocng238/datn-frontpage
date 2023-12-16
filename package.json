@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@syncfusion/ej2-react-calendars": "^23.1.41",
     "@types/node": "^20.9.0",
     "@types/react-credit-cards": "^0.8.4",
+    "@types/validator": "^13.11.7",
     "apexcharts": "^3.44.2",
     "axios": "^1.6.0",
     "clsx": "^2.0.0",

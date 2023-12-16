@@ -50,8 +50,8 @@ export const defaultDoctorDetail: DoctorDetail = {
 export interface DoctorFilter {
   search?: string;
   address?: string;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
   // fee_per_hour?: {
   //     start_price:number,
   //     end_price:number

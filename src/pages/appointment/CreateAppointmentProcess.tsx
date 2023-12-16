@@ -71,7 +71,7 @@ export default function CreateAppointmentProcess(props: Props) {
     if (activeStep === 0) {
       return (
         <div className="flex items-center justify-around md:mt-5">
-          <div className="w-96 ">
+          <div className="w-96 custom-datepicker-input ">
             <DateTimePickerComponent
               value={dateTime}
               min={today}
@@ -80,6 +80,7 @@ export default function CreateAppointmentProcess(props: Props) {
               }}
               placeholder="Choose a date and time"
               step={60}
+              allowEdit={false}
             ></DateTimePickerComponent>
           </div>
         </div>

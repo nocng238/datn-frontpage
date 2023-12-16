@@ -47,3 +47,8 @@
   /* Your styles here */
   height: 100% !important;
 }
+
+.custom-datepicker-input .e-input-group .e-clear-icon.e-clear-icon-hide,
+.e-input-group.e-control-wrapper .e-clear-icon {
+  display: none !important;
+}

@@ -206,6 +206,7 @@ export default function Payments() {
                     Your Email
                   </Typography>
                   <Input
+                    crossOrigin={undefined}
                     type="email"
                     placeholder="name@mail.com"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
@@ -259,6 +260,7 @@ export default function Payments() {
                     Postal Code
                   </Typography>
                   <Input
+                    crossOrigin={undefined}
                     placeholder="0000"
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                     labelProps={{

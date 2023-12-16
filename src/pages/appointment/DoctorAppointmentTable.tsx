@@ -29,7 +29,6 @@ import {
   Textarea,
 } from "@material-tailwind/react";
 import { useBoolean, usePagination, useString } from "@app/helpers/hooks";
-import CreateAppointmentProcess from "./CreateAppointmentProcess";
 import InputDefault from "@app/components/Input/InputDefault";
 import PaymentStatusLable from "@app/components/StatusLable/PaymentStatus";
 import AppointmentStatus from "@app/components/StatusLable/AppointmentStatus";
@@ -52,8 +51,7 @@ import { toast } from "react-toastify";
 import { compareDate, formatDate } from "@app/helpers/utils";
 import ReasonModal from "./Modal/ReasonModal";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
-import EmtyData from "@app/assets/images/empty-data.png";
-import NoData from "./Nodata";
+import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
 const TABLE_HEAD = [
   "Client",
   "Phone number",
@@ -301,7 +299,7 @@ export default function DoctorAppointmentTable() {
                 {compareDate(
                   today.toLocaleString(),
                   selectedAppointment.startTime
-                ) < 0 ? (
+                ) > 0 ? (
                   <Button
                     size="md"
                     variant="gradient"
@@ -324,7 +322,7 @@ export default function DoctorAppointmentTable() {
                         // openModal.setValue(false);
                       }}
                     >
-                      No show
+                      Absent
                     </Button>
                     <Button
                       size="md"
@@ -402,8 +400,8 @@ export default function DoctorAppointmentTable() {
       </CardHeader>
 
       {appointments.length === 0 ? (
-        <CardBody>
-          <NoData context="No data" />
+        <CardBody className="flex justify-around">
+          <ScheduleEmpty />
         </CardBody>
       ) : (
         <>

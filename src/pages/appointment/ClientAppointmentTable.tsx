@@ -60,6 +60,7 @@ import { MESSAGE } from "@app/constants/message";
 import { formatDate } from "@app/helpers/utils";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
 import FeedbackModal from "./Modal/FeedbackModal";
+import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
 
 const TABLE_HEAD = [
   "Doctor",
@@ -401,6 +402,7 @@ export default function ClientAppointmentTable() {
     if (!selectedAppointment) return;
     sendFeedbackMiddleware(selectedAppointment.id, feedback, rating)
       .then((res) => {
+        getAppointmentList();
         toast(<LabelNotification type="success" message="Success" />);
       })
       .catch((error) => {
@@ -447,168 +449,183 @@ export default function ClientAppointmentTable() {
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
-        <table className="mt-4 w-full min-w-max table-auto text-left">
-          <thead>
-            <tr>
-              {TABLE_HEAD.map((head) => (
-                <th
-                  key={head}
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    {head}
-                  </Typography>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((item, index) => {
-              const isLast = index === appointments.length - 1;
-              const classes = isLast
-                ? "p-4"
-                : "p-4 border-b border-blue-gray-50";
+      {appointments.length ? (
+        <>
+          <CardBody className="overflow-scroll px-0">
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {appointments.map((item, index) => {
+                  const isLast = index === appointments.length - 1;
+                  const classes = isLast
+                    ? "p-4"
+                    : "p-4 border-b border-blue-gray-50";
 
-              return (
-                <tr key={item.id}>
-                  <td className={classes}>
-                    <div className="flex items-center gap-3">
-                      <Avatar
-                        src={item.doctor.avatar}
-                        alt={item.doctor.fullname}
-                        size="sm"
-                      />
-                      <div className="flex flex-col">
+                  return (
+                    <tr key={item.id}>
+                      <td className={classes}>
+                        <div className="flex items-center gap-3">
+                          <Avatar
+                            src={item.doctor.avatar}
+                            alt={item.doctor.fullname}
+                            size="sm"
+                          />
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item.doctor.fullname}
+                            </Typography>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal opacity-70"
+                            >
+                              {item.doctor.email}
+                            </Typography>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal w-[150px]"
+                        >
+                          {item.doctor.address}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          <AppointmentStatus status={item.status} />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          <PaymentStatusLable status={item.paymentStatus} />
+                        </div>
+                      </td>
+
+                      {/* payment method */}
+                      <td className={classes}>
+                        <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
+                          {item.paymentMethod === PAYMENT_METHOD.CARD ? (
+                            <CreditCardIcon className="h-full w-full object-contain p-1" />
+                          ) : (
+                            <BanknotesIcon className="h-full w-full object-contain p-1" />
+                          )}
+                        </div>
+                      </td>
+                      <td className={classes}>
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {item.doctor.fullname}
+                          {formatDate(item.startTime)}
                         </Typography>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal opacity-70"
-                        >
-                          {item.doctor.email}
-                        </Typography>
-                      </div>
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal w-[150px]"
-                    >
-                      {item.doctor.address}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <div className="w-max">
-                      <AppointmentStatus status={item.status} />
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <div className="w-max">
-                      <PaymentStatusLable status={item.paymentStatus} />
-                    </div>
-                  </td>
+                      </td>
+                      <td className={classes}>
+                        <Tooltip content="View more">
+                          <IconButton
+                            variant="text"
+                            onClick={() => {
+                              setSelectedAppointment(item);
+                              openModalDetail.setValue(true);
+                            }}
+                          >
+                            <EyeIcon className="h-5 w-5 text-gray-600" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content="Doctor note">
+                          <IconButton variant="text">
+                            <CustomIcon src={NoteIcon} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content="Cancel appointment">
+                          <IconButton
+                            variant="text"
+                            disabled={
+                              item.status === APPOINTMENT_STATUS.CANCEL ||
+                              item.status === APPOINTMENT_STATUS.FINISHED
+                            }
+                            onClick={() => {
+                              console.log("hi");
+                            }}
+                          >
+                            <CustomIcon
+                              src={CancelAppointmentIcon}
+                              className="w-4 h-4"
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </CardBody>
+          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal"
+            >
+              Page {currentPage.value + 1} of {maxPage}
+            </Typography>
+            <div className="flex gap-2">
+              <Button
+                variant="outlined"
+                size="sm"
+                disabled={currentPage.value === 0}
+                onClick={() => {
+                  if (currentPage.value === 0) return;
+                  currentPage.setValue(currentPage.value - 1);
+                }}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outlined"
+                size="sm"
+                disabled={currentPage.value + 1 === maxPage}
+                onClick={() => {
+                  currentPage.setValue(currentPage.value + 1);
+                }}
+              >
+                Next
+              </Button>
+            </div>
+          </CardFooter>
+        </>
+      ) : (
+        <CardBody className="flex md:justify-around">
+          <ScheduleEmpty
+            onCreateAppointment={() => openCreateModal.setValue(true)}
+          />
+        </CardBody>
+      )}
 
-                  {/* payment method */}
-                  <td className={classes}>
-                    <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                      {item.paymentMethod === PAYMENT_METHOD.CARD ? (
-                        <CreditCardIcon className="h-full w-full object-contain p-1" />
-                      ) : (
-                        <BanknotesIcon className="h-full w-full object-contain p-1" />
-                      )}
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {formatDate(item.startTime)}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Tooltip content="View more">
-                      <IconButton
-                        variant="text"
-                        onClick={() => {
-                          setSelectedAppointment(item);
-                          openModalDetail.setValue(true);
-                        }}
-                      >
-                        <EyeIcon className="h-5 w-5 text-gray-600" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip content="Doctor note">
-                      <IconButton variant="text">
-                        <CustomIcon src={NoteIcon} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip content="Cancel appointment">
-                      <IconButton
-                        variant="text"
-                        disabled={
-                          item.status === APPOINTMENT_STATUS.CANCEL ||
-                          item.status === APPOINTMENT_STATUS.FINISHED
-                        }
-                        onClick={() => {
-                          console.log("hi");
-                        }}
-                      >
-                        <CustomIcon
-                          src={CancelAppointmentIcon}
-                          className="w-4 h-4"
-                        />
-                      </IconButton>
-                    </Tooltip>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </CardBody>
-      <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-        <Typography variant="small" color="blue-gray" className="font-normal">
-          Page {currentPage.value + 1} of {maxPage}
-        </Typography>
-        <div className="flex gap-2">
-          <Button
-            variant="outlined"
-            size="sm"
-            disabled={currentPage.value === 0}
-            onClick={() => {
-              if (currentPage.value === 0) return;
-              currentPage.setValue(currentPage.value - 1);
-            }}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outlined"
-            size="sm"
-            disabled={currentPage.value + 1 === maxPage}
-            onClick={() => {
-              currentPage.setValue(currentPage.value + 1);
-            }}
-          >
-            Next
-          </Button>
-        </div>
-      </CardFooter>
       {renderCreateModal()}
       {renderModalDetail()}
     </Card>

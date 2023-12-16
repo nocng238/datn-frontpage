@@ -1,4 +1,4 @@
-import { Typography } from "@material-tailwind/react";
+import { Card, Typography } from "@material-tailwind/react";
 import LineChart from "./Charts/LineChart";
 import PieChart from "./Charts/PieChart";
 import ReviewCard from "../appointment/molecules/ReviewCard";
@@ -9,6 +9,8 @@ import {
   getDoctorReviews,
   getRevenueDataChart,
 } from "./services/api";
+import Statistic from "./Charts/Statistic";
+import { BanknotesIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
 
 const DoctorDashBoard = () => {
   const [reviews, setReviews] = useState<ReviewDetail[]>([]);
@@ -31,13 +33,29 @@ const DoctorDashBoard = () => {
   };
   return (
     <div className="flex h-full">
-      <div className="w-[60%] flex flex-col gap-10">
+      <div className="w-[60%] flex flex-col gap-10 pr-4 overflow-auto">
+        <div className="flex gap-3">
+          <Statistic
+            data="$240.94"
+            arrow="up"
+            percentage={68.2}
+            title="Revenue"
+            icon={<BanknotesIcon className="w-6 h-6" />}
+          />
+          <Statistic
+            data="17"
+            arrow="down"
+            percentage={68.2}
+            title="Appointment"
+            icon={<CalendarDaysIcon className="w-6 h-6" />}
+          />
+        </div>
         <LineChart data={revenueChartData} />
         <PieChart data={pieChartData} />
       </div>
 
-      <div className="px-4 w-[40%] max-h-[100vh] overflow-auto">
-        <Typography variant="h4" color="black" className="text-center">
+      <Card className="ml-4 px-4 w-[40%] max-h-[100vh] overflow-auto">
+        <Typography variant="h4" color="black" className="text-center my-4">
           Customer reviews
         </Typography>
         <div className="flex flex-col gap-3">
@@ -45,7 +63,7 @@ const DoctorDashBoard = () => {
             return <ReviewCard reviewDetail={item} />;
           })}
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
