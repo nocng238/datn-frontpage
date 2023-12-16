@@ -26,11 +26,7 @@ const CustomToolbar = () => {
   return (
     <div id="customToolBar" className="rounded-full flex">
       <div>
-        <select
-          className="ql-header"
-          defaultValue={""}
-          onChange={(e) => e.persist()}
-        >
+        <select className="ql-header" onChange={(e) => e.persist()}>
           <option value="1" />
           <option value="2" />
           <option selected />
@@ -56,6 +52,7 @@ const CustomToolbar = () => {
     </div>
   );
 };
+
 const QuillEditor = (props: Props) => {
   const { onEditNotes, note, appointmentId, isSavingNote } = props;
   const quillRef = useRef<any>(appointmentId);
@@ -96,26 +93,27 @@ const QuillEditor = (props: Props) => {
     setValue(notes);
     debouceOnUpdateNotes(notes);
   };
-
   const debouceOnUpdateNotes = useCallback(debounce(onEditNotes, 1000), []);
-  const modules = {
-    toolbar: {
-      container: "#customToolBar",
-      handlers: {
-        image: imageHandler,
+  const modules = useMemo(() => {
+    return {
+      toolbar: {
+        container: "#customToolBar",
+        handlers: {
+          image: imageHandler,
+        },
       },
-    },
-    clipboard: {
-      matchVisual: false,
-    },
-    imageResize: {
-      parchment: Quill.import("parchment"),
-      modules: ["Resize", "Toolbar"],
-    },
-  };
+      clipboard: {
+        matchVisual: false,
+      },
+      imageResize: {
+        parchment: Quill.import("parchment"),
+        modules: ["Resize", "Toolbar"],
+      },
+    };
+  }, [appointmentId]);
 
   return (
-    <div className="text-editor w-full">
+    <div className="text-editor  w-full">
       <ReactQuill
         key={`${appointmentId}editor`}
         className={`w-full h-[70vh] overflow-auto text-black ${

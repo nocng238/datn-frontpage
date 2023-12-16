@@ -445,7 +445,6 @@ export default function DoctorAppointmentTable() {
           </div>
         </DialogHeader>
         <DialogBody>
-          {/* <div></div> */}
           <QuillEditor
             appointmentId={selectedAppointment.id}
             note={selectedAppointment.note}
