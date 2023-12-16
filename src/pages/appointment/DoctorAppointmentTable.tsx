@@ -9,9 +9,6 @@ import {
 } from "@heroicons/react/24/solid";
 import NoteIcon from "@app/assets/icons/icon-note.svg";
 import ApproveAppointment from "@app/assets/icons/icon-approve-appointment.svg";
-import PaypalIcon from "@app/assets/icons/icon-paypal.svg";
-import CodIcon from "@app/assets/icons/cod-icon.svg";
-
 import {
   Card,
   CardHeader,
@@ -37,12 +34,14 @@ import {
   APPOINTMENT_STATUS,
   DoctorAppoinmentDetail,
   PAYMENT_METHOD,
+  defaultDoctorAppointmentDetail,
 } from "./types";
 import {
   approveAppointment,
   cancelAppointmentByDoctorMiddleware,
   finishAppointmentByDoctorMiddleware,
   getListAppointmentForDoctor,
+  markAbsentAppointmentByDoctorMiddleware,
   rejectAppointmentMiddleware,
 } from "./services/api";
 import LabelNotification from "@app/components/Notification/LabelNotification";
@@ -52,6 +51,8 @@ import { compareDate, formatDate } from "@app/helpers/utils";
 import ReasonModal from "./Modal/ReasonModal";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
 import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
+import ConfirmModal from "./Modal/ConfirmModal";
+import QuillEditor from "@app/components/Editor/QuillEditor";
 const TABLE_HEAD = [
   "Client",
   "Phone number",
@@ -63,7 +64,6 @@ const TABLE_HEAD = [
 ];
 
 export default function DoctorAppointmentTable() {
-  const openCreateModal = useBoolean();
   const [appointments, setAppointments] = useState<DoctorAppoinmentDetail[]>(
     []
   );
@@ -71,8 +71,11 @@ export default function DoctorAppointmentTable() {
   const openModal = useBoolean();
   const openConfirmRejectModal = useBoolean();
   const openConfirmCancelModal = useBoolean();
+  const openConfirmAbsentModal = useBoolean();
+  const openDoctorNote = useBoolean();
+  const isSavingNote = useBoolean();
   const [selectedAppointment, setSelectedAppointment] =
-    useState<DoctorAppoinmentDetail>();
+    useState<DoctorAppoinmentDetail>(defaultDoctorAppointmentDetail);
   const today = new Date();
   const { setPagination, currentPage, maxPage, pageNumberLimit } =
     usePagination();
@@ -204,11 +207,41 @@ export default function DoctorAppointmentTable() {
         openModal.setValue(false);
       });
   };
+  const handleMarkAbsent = (appointmentId: string) => {
+    if (!appointmentId) return;
+    const appointmentIndex = appointments.findIndex(
+      (item) => item.id === appointmentId
+    );
+    if (appointmentIndex === -1) return;
+    markAbsentAppointmentByDoctorMiddleware(
+      appointmentId,
+      formatDate(new Date(), "YYYY-MM-DD HH:mm:ssZ")
+    )
+      .then((_res) => {
+        appointments[appointmentIndex].status = APPOINTMENT_STATUS.ABSENT;
+        setAppointments([...appointments]);
+        toast(<LabelNotification type="success" message={"Success"} />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      })
+      .finally(() => {
+        openModal.setValue(false);
+      });
+  };
   const onSubmitRejected = (reason: string) => {
     handleRejectAppointment(selectedAppointment?.id || "", reason);
   };
   const onSubmitCancel = (reason: string) => {
     handleCancelAppointment(selectedAppointment?.id || "", reason);
+  };
+  const onMarkAppointmentAbsent = () => {
+    handleMarkAbsent(selectedAppointment?.id || "");
   };
 
   const renderModalDetail = () => {
@@ -250,7 +283,7 @@ export default function DoctorAppointmentTable() {
           </div>
         </DialogHeader>
         <DialogBody>
-          <div>
+          <>
             <div className="flex gap-8 items-center p-2 bg-gray-200 rounded-md">
               <CalendarIcon className="w-8 h-8" />
               <div>
@@ -275,21 +308,7 @@ export default function DoctorAppointmentTable() {
               </Typography>
               <Textarea value={selectedAppointment.note} disabled />
             </div>
-          </div>
-          <ReasonModal
-            onSubmit={onSubmitCancel}
-            onOpenModal={openConfirmCancelModal}
-            onCloseModal={() => {
-              openModal.setValue(true);
-            }}
-          />
-          <ReasonModal
-            onSubmit={onSubmitRejected}
-            onOpenModal={openConfirmRejectModal}
-            onCloseModal={() => {
-              openModal.setValue(true);
-            }}
-          />
+          </>
         </DialogBody>
         {(selectedAppointment.status === APPOINTMENT_STATUS.PENDING ||
           selectedAppointment.status === APPOINTMENT_STATUS.APPROVED) && (
@@ -318,8 +337,7 @@ export default function DoctorAppointmentTable() {
                       variant="gradient"
                       color="red"
                       onClick={() => {
-                        openConfirmCancelModal.setValue(true);
-                        // openModal.setValue(false);
+                        openConfirmAbsentModal.setValue(true);
                       }}
                     >
                       Absent
@@ -367,6 +385,76 @@ export default function DoctorAppointmentTable() {
             )}
           </DialogFooter>
         )}
+
+        {/* sub modals */}
+        <ReasonModal
+          onSubmit={onSubmitCancel}
+          onOpenModal={openConfirmCancelModal}
+          onCloseModal={() => {
+            openModal.setValue(true);
+          }}
+        />
+        <ReasonModal
+          onSubmit={onSubmitRejected}
+          onOpenModal={openConfirmRejectModal}
+          onCloseModal={() => {
+            openModal.setValue(true);
+          }}
+        />
+        <ConfirmModal
+          onSubmit={onMarkAppointmentAbsent}
+          onOpenModal={openConfirmAbsentModal}
+          onCloseModal={() => {
+            openModal.setValue(true);
+          }}
+          title="Are you sure to mark this appointment absent?"
+        />
+      </Dialog>
+    );
+  };
+  const onEditNote = (appointmentId: string, note: string) => {
+    const appointmentIndex = appointments.findIndex(
+      (item) => item.id === appointmentId
+    );
+    if (appointmentIndex === -1) return;
+    appointments[appointmentIndex].note = note;
+    setAppointments(appointments);
+  };
+  const renderDoctorNoteModal = () => {
+    if (!selectedAppointment) return;
+    return (
+      <Dialog
+        size="lg"
+        className=""
+        open={openDoctorNote.value}
+        handler={() => {}}
+      >
+        <DialogHeader>
+          <div className="w-full">
+            <div className="flex  items-center justify-between">
+              <Typography variant="h3" className="font-medium leading-[1.5]">
+                Notes
+              </Typography>
+              <div className="flex items-center gap-2 ">
+                <XCircleIcon
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={() => openDoctorNote.setValue(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </DialogHeader>
+        <DialogBody>
+          {/* <div></div> */}
+          <QuillEditor
+            appointmentId={selectedAppointment.id}
+            note={selectedAppointment.note}
+            onEditNotes={(note: string) => {
+              onEditNote(selectedAppointment.id, note);
+            }}
+            isSavingNote={isSavingNote}
+          />
+        </DialogBody>
       </Dialog>
     );
   };
@@ -509,7 +597,13 @@ export default function DoctorAppointmentTable() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip content="Doctor note">
-                          <IconButton variant="text">
+                          <IconButton
+                            variant="text"
+                            onClick={() => {
+                              setSelectedAppointment(appointment);
+                              openDoctorNote.setValue(true);
+                            }}
+                          >
                             <CustomIcon src={NoteIcon} />
                           </IconButton>
                         </Tooltip>
@@ -569,6 +663,7 @@ export default function DoctorAppointmentTable() {
       )}
 
       {renderModalDetail()}
+      {selectedAppointment?.id && renderDoctorNoteModal()}
     </Card>
   );
 }

@@ -52,3 +52,14 @@
 .e-input-group.e-control-wrapper .e-clear-icon {
   display: none !important;
 }
+
+.calendar-cancel-icon svg path[stroke] {
+  stroke: #440a7d;
+}
+
+.ql-container.ql-snow {
+  border: 0 !important;
+}
+.ql-editor {
+  padding-left: 0 !important;
+}

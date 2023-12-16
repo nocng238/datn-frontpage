@@ -76,6 +76,16 @@ export const finishAppointmentByDoctorMiddleware = async (
   return res.data;
 };
 
+export const markAbsentAppointmentByDoctorMiddleware = async (
+  appointmentId: string,
+  currentTime: string
+) => {
+  const res = await axios.put(`/appointment/absent/${appointmentId}`, {
+    currentTime,
+  });
+  return res.data;
+};
+
 export const paymentMiddleware = async (
   paymentMethod: PAYMENT_METHOD,
   appointmentId: string

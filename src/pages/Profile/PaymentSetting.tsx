@@ -31,10 +31,9 @@ const PaymentSetting = (props: Props) => {
   const [mainCreditCard, setMainCreditCard] =
     useState<CreditCardProps>(defaultCreditCard);
   const openAddCreditCardModal = useBoolean(false);
-
   useEffect(() => {
     getCreditCards();
-  }, [user]);
+  }, []);
 
   const getCreditCards = () => {
     if (!user.stripeCustomerId) {
@@ -87,7 +86,7 @@ const PaymentSetting = (props: Props) => {
   };
   return (
     <Card className="credit-card-setting w-full h-full p-4 justify-start ">
-      {creditCards.length ? (
+      {creditCards.length || mainCreditCard.id ? (
         <>
           {mainCreditCard.paymentMethodId && (
             <>
@@ -113,7 +112,7 @@ const PaymentSetting = (props: Props) => {
           >
             Payment methods
           </Typography>
-          <div className="grid grid-cols-3 gap-10">
+          <div className="md:grid md:grid-cols-3 gap-10">
             {creditCards.map((creditCard) => {
               return (
                 <div className="relative">

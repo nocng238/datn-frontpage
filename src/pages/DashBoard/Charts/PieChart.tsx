@@ -5,9 +5,8 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
-import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
 import { APPOINTMENT_STATUS } from "@app/pages/appointment/types";
-import { CalendarDaysIcon, CalendarIcon } from "@heroicons/react/24/solid";
+import { CalendarDaysIcon } from "@heroicons/react/24/solid";
 import { DatePickerComponent } from "@syncfusion/ej2-react-calendars";
 import { keys } from "lodash";
 // If you're using Next.js please use the dynamic import for react-apexcharts and remove the import from the top for the react-apexcharts

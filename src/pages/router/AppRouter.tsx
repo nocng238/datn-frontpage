@@ -24,7 +24,11 @@ import PublicDoctors from "../Landing/PublicDoctors";
 
 setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
-
+declare global {
+  interface Window {
+    Quill: any;
+  }
+}
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
     <RequireAuth>
