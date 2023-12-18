@@ -15,8 +15,6 @@ export const setupInterceptors = () => {
   axios.interceptors.request.use(
     (config) => {
       config.baseURL = API_URL;
-      console.log("API_URL : ", API_URL);
-
       const token = localStorage.getItem("access_token") || "";
       const tokenType = localStorage.getItem("token_type") || "Bearer";
       if (token) {
@@ -95,10 +93,10 @@ export const setupInterceptors = () => {
 
       closeLoading();
       // "Unauthorized"
-      // if (error.response.status === 401) {
-      //   localStorage.removeItem("access_token");
-      //   return;
-      // }
+      if (error.response.status === 401) {
+        localStorage.removeItem("access_token");
+        return;
+      }
       // Forbidden denied redirect to 404 page
       // if (error.response.status === 403) {
       //   <Navigate to={PATH.notFound} replace />;
