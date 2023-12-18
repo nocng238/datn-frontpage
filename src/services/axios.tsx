@@ -18,10 +18,8 @@ export const setupInterceptors = () => {
       const token = localStorage.getItem("access_token") || "";
       const tokenType = localStorage.getItem("token_type") || "Bearer";
       if (token) {
-        config.headers = {
-          Authorization: `${tokenType} ${token}`,
-        } as AxiosRequestHeaders;
         config.headers.set("ngrok-skip-browser-warning", "69420");
+        config.headers.set("Authorization", `${tokenType} ${token}`);
       }
 
       //   if (
