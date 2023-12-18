@@ -21,6 +21,7 @@ export const setupInterceptors = () => {
         config.headers = {
           Authorization: `${tokenType} ${token}`,
         } as AxiosRequestHeaders;
+        config.headers.set("ngrok-skip-browser-warning", "69420");
       }
 
       //   if (
