@@ -20,7 +20,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^2.2.0",
-    "@syncfusion/ej2-react-calendars": "^23.1.41",
+    "@syncfusion/ej2-react-calendars": "^24.1.41",
     "@types/node": "^20.9.0",
     "@types/react-credit-cards": "^0.8.4",
     "@types/validator": "^13.11.7",
