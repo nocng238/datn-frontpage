@@ -17,8 +17,8 @@ export const setupInterceptors = () => {
       config.baseURL = API_URL;
       const token = localStorage.getItem("access_token") || "";
       const tokenType = localStorage.getItem("token_type") || "Bearer";
+      config.headers.set("ngrok-skip-browser-warning", "69420");
       if (token) {
-        config.headers.set("ngrok-skip-browser-warning", "69420");
         config.headers.set("Authorization", `${tokenType} ${token}`);
       }
 
