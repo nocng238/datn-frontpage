@@ -13,6 +13,7 @@ import { setUserInfoAction } from "../auth/stores/actions";
 import { configureStore } from "@app/stores/configureStore";
 import { getMe } from "./services/api";
 import DoctorDashBoard from "../DashBoard/DoctorDashBoard";
+import CalendarSetting from "../DoctorSetting/CalendarSetting";
 
 const MainLayout = () => {
   const user = useAppSelector((state) => state.userInfo);
@@ -41,6 +42,8 @@ const MainLayout = () => {
             <Route path={PATH.appointment} element={<Appointment />} />
             <Route path={"/schedule"} element={<Schedule />} />
             <Route path={"/dashboard"} element={<DoctorDashBoard />} />
+            <Route path={"/settings"} element={<CalendarSetting />} />
+
             <Route index element={<Navigate to={PATH.profile} />} />
             {/* <Route path="*" navi/> */}
           </Routes>

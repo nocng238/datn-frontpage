@@ -43,8 +43,6 @@ export const getCreditCardsMiddleware = async (): Promise<
   CreditCardProps[]
 > => {
   const res = await Axios.get(`/credit-card`);
-  console.log(res.data);
-
   const result: CreditCardProps[] = res.data.map((creditCard: any) => {
     return {
       id: creditCard.id,

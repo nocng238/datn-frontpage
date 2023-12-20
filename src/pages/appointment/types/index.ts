@@ -1,4 +1,4 @@
-import { UserInfo } from "@app/pages/auth/types";
+import { UserInfo, defaultUser } from "@app/pages/auth/types";
 
 export interface CreateAppointmentRequest {
   startTime: string;
@@ -12,6 +12,7 @@ export enum APPOINTMENT_STATUS {
   CANCEL = "CANCEL",
   FINISHED = "FINISHED",
   REJECTED = "REJECTED",
+  ABSENT = "ABSENT",
 }
 export enum PAYMENT_STATUS {
   PAID = "PAID",
@@ -52,6 +53,20 @@ export interface DoctorAppoinmentDetail {
   paymentStatus: PAYMENT_STATUS;
   paymentMethod: PAYMENT_METHOD;
 }
+export const defaultDoctorAppointmentDetail: DoctorAppoinmentDetail = {
+  id: "",
+  status: APPOINTMENT_STATUS.ABSENT,
+  totalPrice: 0,
+  startTime: "",
+  endTime: "",
+  createdAt: "",
+  updatedAt: "",
+  reviewId: "",
+  client: defaultUser,
+  note: "",
+  paymentStatus: PAYMENT_STATUS.PAID,
+  paymentMethod: PAYMENT_METHOD.CARD,
+};
 
 export interface AppointmentFilter {
   search?: string;

@@ -527,10 +527,10 @@ export default function LandingPage() {
                 <div className="flex flex-col items-stretch w-[59%] ml-5 max-md:w-full max-md:ml-0">
                   <div className="flex flex-col items-start max-md:mt-10">
                     <div className="text-black text-3xl font-light tracking-tight self-stretch">
-                      Beryl’s mom
+                      Nguyen Mai Thanh Ngoc
                     </div>
                     <div className="text-black text-xl italic font-light tracking-tight self-stretch whitespace-nowrap mt-2">
-                      Foods
+                      Services
                     </div>
                     <img
                       loading="lazy"

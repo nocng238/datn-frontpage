@@ -15,8 +15,6 @@ import moment from "moment";
 import { EventContentArg } from "@fullcalendar/core";
 import { useBoolean } from "@app/helpers/hooks";
 import AppointmentDetailModal from "../appointment/Modal/AppoimentDetailModal";
-import { renderColor } from "@app/components/StatusLable/AppointmentStatusLable";
-let todayStr = new Date().toISOString().replace(/T.*$/, "");
 const Schedule = () => {
   const [appointments, setAppointments] = useState<DoctorAppoinmentDetail[]>(
     []
@@ -78,6 +76,8 @@ const Schedule = () => {
                 ? "#1e88e5"
                 : appointment.status === APPOINTMENT_STATUS.FINISHED
                 ? "#43a047"
+                : appointment.status === APPOINTMENT_STATUS.ABSENT
+                ? "#ba68c8"
                 : "#e53935",
           };
         })}

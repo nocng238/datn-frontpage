@@ -39,3 +39,27 @@
 .fc-direction-ltr {
   height: 100%;
 }
+
+.calendar_default_main {
+  height: 100%;
+}
+.calendar_default_main > div:nth-child(2) {
+  /* Your styles here */
+  height: 100% !important;
+}
+
+.custom-datepicker-input .e-input-group .e-clear-icon.e-clear-icon-hide,
+.e-input-group.e-control-wrapper .e-clear-icon {
+  display: none !important;
+}
+
+.calendar-cancel-icon svg path[stroke] {
+  stroke: #440a7d;
+}
+
+.ql-container.ql-snow {
+  border: 0 !important;
+}
+.ql-editor {
+  padding-left: 0 !important;
+}

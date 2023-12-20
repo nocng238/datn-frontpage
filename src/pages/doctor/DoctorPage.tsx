@@ -11,6 +11,7 @@ import { getDoctorsMiddleware } from "./services/api";
 import { MESSAGE } from "@app/constants/message";
 import DoctorModal from "./DoctorModal";
 import { VIETNAM_PROVINCES } from "@app/constants/provinces";
+import NoSearchResults from "@app/components/EmptyState/NoSearchData";
 const DoctorPage = () => {
   const openModal = useBoolean();
   const [doctors, setDoctors] = useState<DoctorDetail[]>([]);
@@ -152,20 +153,26 @@ const DoctorPage = () => {
         </div>
       </div>
       {/* body */}
-      <div className="grid grid-cols-auto-fill-min-350 gap-6 my-1">
-        {doctors.map((doctor) => {
-          return (
-            <DoctorCard
-              key={doctor.id}
-              doctorDetail={doctor}
-              onViewMore={() => {
-                openModal.setValue(true);
-                setSelectedDoctor(doctor);
-              }}
-            />
-          );
-        })}
-      </div>
+      {doctors.length === 0 ? (
+        <div className="flex items-center justify-around md:pt-10">
+          <NoSearchResults />
+        </div>
+      ) : (
+        <div className="grid grid-cols-auto-fill-min-350 gap-6 my-1">
+          {doctors.map((doctor) => {
+            return (
+              <DoctorCard
+                key={doctor.id}
+                doctorDetail={doctor}
+                onViewMore={() => {
+                  openModal.setValue(true);
+                  setSelectedDoctor(doctor);
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
       <DoctorModal openModal={openModal} doctorDetail={selectedDoctor} />
     </div>
   );

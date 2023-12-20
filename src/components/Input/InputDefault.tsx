@@ -119,6 +119,7 @@ const InputDefault = (props: InputDefaultProps) => {
         className: otherProps.label ? "" : "hidden",
       }}
       icon={otherProps.icon || renderIcon()}
+      crossOrigin={undefined}
     />
   );
 };

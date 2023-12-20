@@ -27,7 +27,7 @@ const DoctorCard = (props: DoctorCardProps) => {
         doctorDetail.id === selectedDoctorId
           ? "border-blue-gray-200 shadow-lg"
           : ""
-      } hover:border-blue-gray-200 hover:shadow-lg`}
+      } hover:border-blue-gray-200 hover:shadow-lg h-full justify-between`}
     >
       <CardHeader
         color="transparent"

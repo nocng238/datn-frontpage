@@ -7,7 +7,7 @@ interface Props {
 const ReviewCard = (props: Props) => {
   const { reviewDetail } = props;
   return (
-    <Card className="flex flex-col gap-4 p-2">
+    <div className="flex flex-col gap-4 p-2 shadow-lg rounded-lg">
       <Rating value={reviewDetail.review.rating} readonly />
       <Typography>{reviewDetail.review.feedback}</Typography>
       <div className="flex items-center gap-4">
@@ -23,7 +23,7 @@ const ReviewCard = (props: Props) => {
           </Typography>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

@@ -124,11 +124,11 @@ const DoctorModal = (props: DoctorModalProps) => {
                 {doctorDetail.feePerHour}$
               </Typography>
             </div>
-            <div className="px-4">
-              <Typography variant="h4" color="black" className="text-center">
-                Customer reviews
-              </Typography>
-              <div className="flex flex-col gap-3">
+            <Typography variant="h4" color="black" className="text-center">
+              Customer reviews
+            </Typography>
+            <div className="px-4 py-2 h-auto overflow-auto">
+              <div className="flex flex-col gap-4">
                 {doctorDetail.reviews.map((item) => {
                   return <ReviewCard reviewDetail={item} />;
                 })}
