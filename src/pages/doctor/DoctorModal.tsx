@@ -72,7 +72,7 @@ const DoctorModal = (props: DoctorModalProps) => {
         </div>
       </DialogHeader>
       <DialogBody>
-        <div className="w-full flex rounded-lg h-full ">
+        <div className="w-full flex rounded-lg ">
           <div className="w-[50%] flex flex-col gap-3 overflow-auto max-h-[70vh]">
             <div className="flex gap-2 items-center">
               <CustomIcon src={IconGender} />
@@ -138,7 +138,7 @@ const DoctorModal = (props: DoctorModalProps) => {
 
           {/* doctor cv */}
           <div className="w-[50%]">
-            <PdfRenderer url={doctorDetail.cv} />
+            <PdfRenderer url={doctorDetail.cv} isModal={true} />
           </div>
         </div>
       </DialogBody>

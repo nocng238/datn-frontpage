@@ -16,7 +16,6 @@ import {
   MagnifyingGlassIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/solid";
-import SimpleBar from "simplebar-react";
 import InputDefault from "@app/components/Input/InputDefault";
 import {
   Spinner,
@@ -29,16 +28,16 @@ import {
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { cn } from "@app/helpers/utils";
-import path from "path";
 // import PdfFullscreen from './PdfFullscreen'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 interface PdfRendererProps {
   url: string;
+  isModal?: boolean;
 }
 
-const PdfRenderer = ({ url }: PdfRendererProps) => {
+const PdfRenderer = ({ url, isModal }: PdfRendererProps) => {
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
@@ -173,7 +172,11 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
         </div>
       </div>
 
-      <div className="flex-1 w-full max-h-[70vh] overflow-auto">
+      <div
+        className={`flex-1 w-full ${
+          isModal ? "max-h-[70vh]" : "max-h-[85vh]"
+        } overflow-auto`}
+      >
         <div ref={ref}>
           <Document
             loading={

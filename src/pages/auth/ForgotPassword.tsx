@@ -15,6 +15,10 @@ import InputDefault from "@app/components/Input/InputDefault";
 import { isEmpty, isUndefined } from "lodash";
 import { isValidEmail, validationPassword } from "@app/helpers/utils";
 import { useString } from "@app/helpers/hooks";
+import { forgotPassword } from "./services/api";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
+import { MESSAGE } from "@app/constants/message";
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const email = useString();
@@ -24,12 +28,26 @@ export default function ForgotPassword() {
   ): void => {
     if (event.key === "Enter") {
       event.preventDefault();
-      if (isValidEmail(email.value)) onClickButton();
+      if (isValidEmail(email.value)) onClickReset();
     }
   };
-  const onClickButton = () => {};
-  const handleChangeInput = (event: any) => {
-    email.setValue(event.target.value);
+
+  const onClickReset = () => {
+    forgotPassword(email.value)
+      .then((_res) => {
+        navigate({
+          pathname: "/auth/reset-password",
+          search: `?email=${email.value}`,
+        });
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response.data.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
   };
   return (
     <Card className="w-96 bg-opacity-70">
@@ -59,7 +77,7 @@ export default function ForgotPassword() {
           fullWidth
           className="cursor-pointer"
           disabled={!isValidEmail(email.value)}
-          onClick={() => {}}
+          onClick={onClickReset}
         >
           Reset
         </Button>

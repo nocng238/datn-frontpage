@@ -29,3 +29,15 @@ export const doctorSignUpMiddleware = async (request: DoctorRequest) => {
 export const verifyEmail = async (email: string, token: string) => {
   return Axios.post("/verify-email", { email, token });
 };
+
+export const forgotPassword = async (email: string) => {
+  return Axios.post("/forget-password", { email });
+};
+
+export const resetPassword = async (
+  email: string,
+  code: string,
+  newPassword: string
+) => {
+  return Axios.put("/reset-password", { email, code, newPassword });
+};

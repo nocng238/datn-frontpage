@@ -21,6 +21,8 @@ import Charades from "../games/Charades";
 import VerifyEmail from "../auth/VerifyEmail";
 import LandingPage from "../Landing/LandingPage";
 import PublicDoctors from "../Landing/PublicDoctors";
+import ResetPassword from "../auth/ResetPassword";
+import ResetPasswordSuccess from "../auth/ResetPasswordSuccess";
 
 setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
@@ -51,6 +53,11 @@ export const AppRouter: React.FC = () => {
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="confirm-email" element={<ConfirmEmail />} />
           <Route path="verify-email" element={<VerifyEmail />} />
+          <Route path="reset-password" element={<ResetPassword />} />
+          <Route
+            path="reset-password-sucess"
+            element={<ResetPasswordSuccess />}
+          />
         </Route>
         <Route path={"error/404"} element={<NotFound />} />
         <Route path="/*" element={protectedLayout} />

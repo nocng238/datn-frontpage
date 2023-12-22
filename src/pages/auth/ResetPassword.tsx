@@ -9,10 +9,34 @@ import {
   CardHeader,
   Typography,
 } from "@material-tailwind/react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { resetPassword } from "./services/api";
+import { toast } from "react-toastify";
+import LabelNotification from "@app/components/Notification/LabelNotification";
+import { MESSAGE } from "@app/constants/message";
 
 const ResetPassword = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const password = useString();
   const confirmPassword = useString();
+  const code = useString();
+  const onSubmit = () => {
+    const email = searchParams.get("email");
+    if (!email) return;
+    resetPassword(email, code.value, password.value)
+      .then((_res) => {
+        navigate("/auth/reset-password-sucess");
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response.data.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
+  };
   return (
     <Card className="w-96 bg-opacity-70">
       <CardHeader
@@ -41,6 +65,14 @@ const ResetPassword = () => {
           value={confirmPassword.value}
           onChange={(e) => confirmPassword.setValue(e.target.value)}
         />
+        <Typography variant="h6" color="blue-gray" className="-mb-3">
+          Code
+        </Typography>
+        <InputDefault
+          type="text"
+          value={code.value}
+          onChange={(e) => code.setValue(e.target.value)}
+        />
       </CardBody>
       <CardFooter className="pt-0">
         <Button
@@ -49,11 +81,11 @@ const ResetPassword = () => {
           fullWidth
           className="cursor-pointer"
           disabled={
-            validationPassword(password.value) ||
-            validationPassword(confirmPassword.value) ||
+            !validationPassword(password.value) ||
+            !validationPassword(confirmPassword.value) ||
             confirmPassword.value !== password.value
           }
-          onClick={() => {}}
+          onClick={onSubmit}
         >
           Reset
         </Button>
@@ -61,3 +93,4 @@ const ResetPassword = () => {
     </Card>
   );
 };
+export default ResetPassword;
