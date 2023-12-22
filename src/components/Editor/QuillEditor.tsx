@@ -18,8 +18,9 @@ interface NoteFile {
 interface Props {
   appointmentId: string;
   note: string;
-  onEditNotes: (notes: string) => void;
-  isSavingNote: IUseDefaultValueProps;
+  onEditNotes?: (notes: string) => void;
+  isSavingNote?: IUseDefaultValueProps;
+  readOnly?: boolean;
 }
 
 const CustomToolbar = () => {
@@ -54,7 +55,13 @@ const CustomToolbar = () => {
 };
 
 const QuillEditor = (props: Props) => {
-  const { onEditNotes, note, appointmentId, isSavingNote } = props;
+  const {
+    onEditNotes,
+    note,
+    appointmentId,
+    isSavingNote,
+    readOnly = false,
+  } = props;
   const quillRef = useRef<any>(appointmentId);
   const [value, setValue] = useState(note);
   const { isMobile } = useWindowSize();
@@ -78,9 +85,9 @@ const QuillEditor = (props: Props) => {
   };
 
   const upload = async (formData: FormData) => {
-    isSavingNote.setValue(true);
+    isSavingNote?.setValue(true);
     const response = await Axios.post(`/upload/image`, formData);
-    isSavingNote.setValue(false);
+    isSavingNote?.setValue(false);
     return response.data;
   };
 
@@ -93,7 +100,10 @@ const QuillEditor = (props: Props) => {
     setValue(notes);
     debouceOnUpdateNotes(notes);
   };
-  const debouceOnUpdateNotes = useCallback(debounce(onEditNotes, 1000), []);
+  const debouceOnUpdateNotes = useCallback(
+    debounce(onEditNotes ? onEditNotes : () => {}, 1000),
+    []
+  );
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -123,7 +133,7 @@ const QuillEditor = (props: Props) => {
         value={value}
         onChange={onChangeEditor}
         modules={modules}
-        readOnly={false}
+        readOnly={readOnly}
         theme="snow"
         formats={[
           "header",

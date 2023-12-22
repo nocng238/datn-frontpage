@@ -102,3 +102,13 @@ export const sendFeedbackMiddleware = async (
   const res = await axios.post("/review", { appointmentId, feedback, rating });
   return res.data;
 };
+
+export const editDoctorNoteMiddleware = async (
+  appointmentId: string,
+  note: string
+) => {
+  const res = await axios.put(`/appointment/doctor-note/${appointmentId}`, {
+    note,
+  });
+  return res.data;
+};

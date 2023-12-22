@@ -21,6 +21,9 @@ export const setupInterceptors = () => {
       if (token) {
         config.headers.set("Authorization", `${tokenType} ${token}`);
       }
+      if (config.url?.startsWith("/appointment/doctor-note")) {
+        return config;
+      }
 
       //   if (
       //     // update specification api
@@ -60,6 +63,9 @@ export const setupInterceptors = () => {
     (response) => {
       // Any status code that lie within the range of 2xx cause this function to trigger
       // Do something with response data
+      if (response.config.url?.startsWith("/appointment/doctor-note")) {
+        return response;
+      }
       //   if (
       //     // update specification api
       //     !response.config.url?.startsWith("/api/specification/history/") &&

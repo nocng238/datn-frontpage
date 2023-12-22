@@ -83,9 +83,9 @@ const Profile = () => {
       });
   };
   return (
-    <div className="flex gap-6 max-h-[calc(100vh)]">
+    <div className="flex gap-6 max-h-[calc(100_*_var(--vh)_-_48px)]">
       {/* left side */}
-      <Card className="w-96 h-full">
+      <Card className="w-[291px] h-full">
         <CardHeader floated={false} className="">
           <Avatar src={user.avatar} className="w-full h-full object-cover" />
           <input

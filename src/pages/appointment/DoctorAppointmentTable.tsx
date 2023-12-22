@@ -39,6 +39,7 @@ import {
 import {
   approveAppointment,
   cancelAppointmentByDoctorMiddleware,
+  editDoctorNoteMiddleware,
   finishAppointmentByDoctorMiddleware,
   getListAppointmentForDoctor,
   markAbsentAppointmentByDoctorMiddleware,
@@ -53,6 +54,7 @@ import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatus
 import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
 import ConfirmModal from "./Modal/ConfirmModal";
 import QuillEditor from "@app/components/Editor/QuillEditor";
+import { error } from "console";
 const TABLE_HEAD = [
   "Client",
   "Phone number",
@@ -253,7 +255,7 @@ export default function DoctorAppointmentTable() {
         open={openModal.value}
         handler={() => {}}
       >
-        <DialogHeader className="flex flex-col w-full items-start">
+        <DialogHeader className="flex flex-col w-full items-start ">
           <div className="w-full">
             <div className="flex  items-center justify-between">
               <Typography variant="h3" className="font-medium leading-[1.5]">
@@ -269,7 +271,7 @@ export default function DoctorAppointmentTable() {
           </div>
           <AppoinmentStatusLable
             status={selectedAppointment.status}
-            time={selectedAppointment.updatedAt}
+            time={selectedAppointment.statusUpdatedAt}
           />
           <div className="flex gap-2 items-center mt-4">
             <Avatar
@@ -417,25 +419,47 @@ export default function DoctorAppointmentTable() {
       (item) => item.id === appointmentId
     );
     if (appointmentIndex === -1) return;
-    appointments[appointmentIndex].note = note;
-    setAppointments(appointments);
+    isSavingNote.setValue(true);
+    editDoctorNoteMiddleware(appointmentId, note)
+      .then((_res) => {
+        appointments[appointmentIndex].doctorNote = note;
+        appointments[appointmentIndex].doctorNoteUpdatedAt =
+          new Date().toString();
+        setAppointments(appointments);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      });
+    isSavingNote.setValue(false);
   };
   const renderDoctorNoteModal = () => {
     if (!selectedAppointment) return;
     return (
-      <Dialog
-        size="lg"
-        className=""
-        open={openDoctorNote.value}
-        handler={() => {}}
-      >
-        <DialogHeader>
+      <Dialog size="lg" open={openDoctorNote.value} handler={() => {}}>
+        <DialogHeader className="border-b-[1px] border-gray-400 px-0 mx-4">
           <div className="w-full">
             <div className="flex  items-center justify-between">
               <Typography variant="h3" className="font-medium leading-[1.5]">
                 Notes
               </Typography>
               <div className="flex items-center gap-2 ">
+                {
+                  <p className="text-sm leading-6 font-normal text-gray-600">
+                    {isSavingNote.value
+                      ? "Saving"
+                      : selectedAppointment.doctorNote
+                      ? `Saved at ${formatDate(
+                          selectedAppointment.doctorNoteUpdatedAt,
+                          "H:mm A DD MMM yyyy"
+                        )}`
+                      : ""}
+                  </p>
+                }
                 <XCircleIcon
                   className="w-8 h-8 cursor-pointer"
                   onClick={() => openDoctorNote.setValue(false)}
@@ -447,7 +471,7 @@ export default function DoctorAppointmentTable() {
         <DialogBody>
           <QuillEditor
             appointmentId={selectedAppointment.id}
-            note={selectedAppointment.note}
+            note={selectedAppointment.doctorNote}
             onEditNotes={(note: string) => {
               onEditNote(selectedAppointment.id, note);
             }}

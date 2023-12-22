@@ -18,8 +18,6 @@ import {
 } from "@heroicons/react/24/solid";
 import NoteIcon from "@app/assets/icons/icon-note.svg";
 import CancelAppointmentIcon from "@app/assets/icons/icon-cancel-appointment.svg";
-import PaypalIcon from "@app/assets/icons/icon-paypal.svg";
-import CodIcon from "@app/assets/icons/cod-icon.svg";
 
 import {
   Card,
@@ -61,6 +59,7 @@ import { formatDate } from "@app/helpers/utils";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
 import FeedbackModal from "./Modal/FeedbackModal";
 import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
+import QuillEditor from "@app/components/Editor/QuillEditor";
 
 const TABLE_HEAD = [
   "Doctor",
@@ -83,6 +82,7 @@ export default function ClientAppointmentTable() {
   const search = useString();
   const openCheckoutModal = useBoolean();
   const openFeedbackModal = useBoolean();
+  const openDoctorNote = useBoolean();
   const { setPagination, currentPage, maxPage, pageNumberLimit } =
     usePagination();
   useEffect(() => {
@@ -414,6 +414,46 @@ export default function ClientAppointmentTable() {
         );
       });
   };
+
+  const renderDoctorNoteModal = () => {
+    if (!selectedAppointment) return;
+    return (
+      <Dialog size="lg" open={openDoctorNote.value} handler={() => {}}>
+        <DialogHeader className="border-b-[1px] border-gray-400 px-0 mx-4">
+          <div className="w-full">
+            <div className="flex  items-center justify-between">
+              <Typography variant="h3" className="font-medium leading-[1.5]">
+                Notes
+              </Typography>
+              <div className="flex items-center gap-2 ">
+                {
+                  <p className="text-sm leading-6 font-normal text-gray-600">
+                    {selectedAppointment.doctorNote
+                      ? `Saved at ${formatDate(
+                          selectedAppointment.doctorNoteUpdatedAt,
+                          "H:mm A DD MMM yyyy"
+                        )}`
+                      : ""}
+                  </p>
+                }
+                <XCircleIcon
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={() => openDoctorNote.setValue(false)}
+                />
+              </div>
+            </div>
+          </div>
+        </DialogHeader>
+        <DialogBody>
+          <QuillEditor
+            appointmentId={selectedAppointment.id}
+            note={selectedAppointment.doctorNote}
+            readOnly={true}
+          />
+        </DialogBody>
+      </Dialog>
+    );
+  };
   return (
     <Card className="w-full">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -557,7 +597,10 @@ export default function ClientAppointmentTable() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip content="Doctor note">
-                          <IconButton variant="text">
+                          <IconButton
+                            variant="text"
+                            onClick={() => openDoctorNote.setValue(true)}
+                          >
                             <CustomIcon src={NoteIcon} />
                           </IconButton>
                         </Tooltip>
@@ -628,6 +671,7 @@ export default function ClientAppointmentTable() {
 
       {renderCreateModal()}
       {renderModalDetail()}
+      {renderDoctorNoteModal()}
     </Card>
   );
 }

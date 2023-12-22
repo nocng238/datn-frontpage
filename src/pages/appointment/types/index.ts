@@ -1,4 +1,5 @@
 import { UserInfo, defaultUser } from "@app/pages/auth/types";
+import { extend } from "lodash";
 
 export interface CreateAppointmentRequest {
   startTime: string;
@@ -23,8 +24,7 @@ export enum PAYMENT_METHOD {
   CASH = "CASH",
   CARD = "CARD",
 }
-
-export interface ClientAppointmentDetail {
+interface AppointmentDetail {
   id: string;
   status: APPOINTMENT_STATUS;
   totalPrice: number;
@@ -33,25 +33,20 @@ export interface ClientAppointmentDetail {
   createdAt: string;
   updatedAt: string;
   reviewId: string;
-  doctor: UserInfo;
   note: string;
+  doctorNote: string;
   paymentStatus: PAYMENT_STATUS;
   paymentMethod: PAYMENT_METHOD;
+  doctorNoteUpdatedAt: string;
+  statusUpdatedAt: string;
 }
 
-export interface DoctorAppoinmentDetail {
-  id: string;
-  status: APPOINTMENT_STATUS;
-  totalPrice: number;
-  startTime: string;
-  endTime: string;
-  createdAt: string;
-  updatedAt: string;
-  reviewId: string;
+export interface ClientAppointmentDetail extends AppointmentDetail {
+  doctor: UserInfo;
+}
+
+export interface DoctorAppoinmentDetail extends AppointmentDetail {
   client: UserInfo;
-  note: string;
-  paymentStatus: PAYMENT_STATUS;
-  paymentMethod: PAYMENT_METHOD;
 }
 export const defaultDoctorAppointmentDetail: DoctorAppoinmentDetail = {
   id: "",
@@ -63,9 +58,12 @@ export const defaultDoctorAppointmentDetail: DoctorAppoinmentDetail = {
   updatedAt: "",
   reviewId: "",
   client: defaultUser,
+  doctorNote: "",
   note: "",
   paymentStatus: PAYMENT_STATUS.PAID,
   paymentMethod: PAYMENT_METHOD.CARD,
+  doctorNoteUpdatedAt: "",
+  statusUpdatedAt: "",
 };
 
 export interface AppointmentFilter {
