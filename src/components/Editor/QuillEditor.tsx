@@ -155,7 +155,11 @@ const QuillEditor = (props: Props) => {
           "width",
         ]}
       />
-      <div className="flex items-center justify-center">
+      <div
+        className={`flex items-center justify-center ${
+          readOnly ? "hidden" : ""
+        }`}
+      >
         <CustomToolbar />
       </div>
       {/* )} */}

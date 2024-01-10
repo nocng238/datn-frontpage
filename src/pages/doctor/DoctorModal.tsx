@@ -16,26 +16,28 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import PdfRenderer from "./PdfRender";
-import { IUseDefaultValueProps } from "@app/helpers/hooks";
+import { IUseDefaultValueProps, useBoolean } from "@app/helpers/hooks";
 import { DoctorDetail } from "./types";
 import { defaultAvatar } from "@app/constants/data";
 import CustomIcon from "@app/components/CustomIcon/CustomIcon";
 import IconGender from "@app/assets/icons/icon-gender.svg";
 import { useNavigate } from "react-router-dom";
 import ReviewCard from "../appointment/molecules/ReviewCard";
+import CreateAppointmentModal from "../appointment/Modal/CreateAppointmentModal";
 interface DoctorModalProps {
   openModal: IUseDefaultValueProps;
   doctorDetail: DoctorDetail;
 }
 const DoctorModal = (props: DoctorModalProps) => {
   const { doctorDetail, openModal } = props;
+  const openCreateModal = useBoolean();
   const navigate = useNavigate();
   return (
     <Dialog
       size="xl"
       open={openModal.value}
       handler={() => {
-        openModal.setValue(!openModal.value);
+        // openModal.setValue(!openModal.value);
       }}
       className="overflow-auto"
     >
@@ -141,6 +143,12 @@ const DoctorModal = (props: DoctorModalProps) => {
             <PdfRenderer url={doctorDetail.cv} isModal={true} />
           </div>
         </div>
+        {/* sub  modals */}
+        <CreateAppointmentModal
+          openModal={openCreateModal}
+          handleAddAppointment={() => navigate("/appointment")}
+          doctorId={doctorDetail.id}
+        />
       </DialogBody>
       <DialogFooter className="justify-between">
         <div className="flex items-center gap-16">
@@ -176,7 +184,10 @@ const DoctorModal = (props: DoctorModalProps) => {
           color="blue"
           className="mr-5 flex items-center"
           onClick={() => {
-            navigate("/appointment");
+            const isAuthenticated = localStorage.getItem("access_token");
+            if (isAuthenticated) {
+              openCreateModal.setValue(true);
+            } else navigate("/auth/login");
           }}
         >
           Make an appointment

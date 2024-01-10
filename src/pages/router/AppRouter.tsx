@@ -23,6 +23,7 @@ import LandingPage from "../Landing/LandingPage";
 import PublicDoctors from "../Landing/PublicDoctors";
 import ResetPassword from "../auth/ResetPassword";
 import ResetPasswordSuccess from "../auth/ResetPasswordSuccess";
+import Redirect from "./Redirect";
 
 setupInterceptors();
 // const Error404Page = React.lazy(() => import('@app/pages/'));
@@ -31,6 +32,7 @@ declare global {
     Quill: any;
   }
 }
+const adminURL = "http://localhost:3000/admin";
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
     <RequireAuth>
@@ -45,6 +47,8 @@ export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/admin" element={<Redirect url={adminURL} />} />
+
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/public/doctors" element={<PublicDoctors />} />
         <Route path="/auth" element={publicLayout}>

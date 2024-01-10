@@ -271,7 +271,10 @@ export default function DoctorAppointmentTable() {
           </div>
           <AppoinmentStatusLable
             status={selectedAppointment.status}
-            time={selectedAppointment.statusUpdatedAt}
+            time={
+              selectedAppointment.statusUpdatedAt ||
+              selectedAppointment.updatedAt
+            }
           />
           <div className="flex gap-2 items-center mt-4">
             <Avatar

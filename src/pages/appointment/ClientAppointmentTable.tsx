@@ -48,6 +48,7 @@ import {
   PAYMENT_STATUS,
 } from "./types";
 import {
+  cancelAppointmentByDoctorMiddleware,
   getListAppointmentForClient,
   paymentMiddleware,
   sendFeedbackMiddleware,
@@ -60,6 +61,7 @@ import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatus
 import FeedbackModal from "./Modal/FeedbackModal";
 import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
 import QuillEditor from "@app/components/Editor/QuillEditor";
+import ReasonModal from "./Modal/ReasonModal";
 
 const TABLE_HEAD = [
   "Doctor",
@@ -135,6 +137,35 @@ export default function ClientAppointmentTable() {
         );
       });
   };
+
+  const handleCancelAppointment = (appointmentId: string, reason: string) => {
+    if (!appointmentId) return;
+    const appointmentIndex = appointments.findIndex(
+      (item) => item.id === appointmentId
+    );
+    if (appointmentIndex === -1) return;
+    cancelAppointmentByDoctorMiddleware(appointmentId, reason)
+      .then((_res) => {
+        appointments[appointmentIndex].status = APPOINTMENT_STATUS.CANCEL;
+        setAppointments([...appointments]);
+        toast(<LabelNotification type="success" message={"Success"} />);
+      })
+      .catch((error) => {
+        toast(
+          <LabelNotification
+            type="error"
+            message={error.response?.data?.message || MESSAGE.COMMON_ERROR}
+          />
+        );
+      })
+      .finally(() => {
+        openModalDetail.setValue(false);
+      });
+  };
+  const onSubmitCancel = (reason: string) => {
+    handleCancelAppointment(selectedAppointment?.id || "", reason);
+  };
+
   const renderCreateModal = () => {
     if (openCreateModal.value) {
       return (
@@ -245,54 +276,61 @@ export default function ClientAppointmentTable() {
             onCloseModal={() => openFeedbackModal.setValue(false)}
             onSubmit={handleSubmitFeedback}
           />
+          <ReasonModal
+            onSubmit={onSubmitCancel}
+            onOpenModal={openConfirmCancelModal}
+            onCloseModal={() => {
+              openModalDetail.setValue(true);
+            }}
+          />
           {/*  */}
         </DialogBody>
-        {selectedAppointment.status !== APPOINTMENT_STATUS.CANCEL &&
-          selectedAppointment.status !== APPOINTMENT_STATUS.REJECTED && (
-            <DialogFooter className="flex items-center justify-center gap-10">
-              {selectedAppointment.status === APPOINTMENT_STATUS.APPROVED && (
+        {[APPOINTMENT_STATUS.PENDING, APPOINTMENT_STATUS.APPROVED].includes(
+          selectedAppointment.status
+        ) && (
+          <DialogFooter className="flex items-center justify-center gap-10">
+            {
+              <Button
+                size="md"
+                variant="gradient"
+                color="red"
+                onClick={() => {
+                  openConfirmCancelModal.setValue(true);
+                }}
+              >
+                Cancel
+              </Button>
+            }
+            {selectedAppointment.status === APPOINTMENT_STATUS.FINISHED &&
+              selectedAppointment.paymentStatus === PAYMENT_STATUS.UNPAID && (
                 <Button
                   size="md"
                   variant="gradient"
-                  color="red"
+                  color="indigo"
                   onClick={() => {
-                    openConfirmCancelModal.setValue(true);
-                    openModalDetail.setValue(false);
+                    openCheckoutModal.setValue(true);
                   }}
                 >
-                  Cancel
+                  Checkout
                 </Button>
               )}
-              {selectedAppointment.status === APPOINTMENT_STATUS.FINISHED &&
-                selectedAppointment.paymentStatus === PAYMENT_STATUS.UNPAID && (
-                  <Button
-                    size="md"
-                    variant="gradient"
-                    color="indigo"
-                    onClick={() => {
-                      openCheckoutModal.setValue(true);
-                    }}
-                  >
-                    Checkout
-                  </Button>
-                )}
-              {selectedAppointment.paymentStatus === PAYMENT_STATUS.PAID &&
-                !selectedAppointment.reviewId && (
-                  <Button
-                    size="md"
-                    variant="gradient"
-                    color="indigo"
-                    onClick={() => {
-                      // openConfirmCancelModal.setValue(true);
-                      openFeedbackModal.setValue(true);
-                      // openModalDetail.setValue(false);
-                    }}
-                  >
-                    Review
-                  </Button>
-                )}
-            </DialogFooter>
-          )}
+            {selectedAppointment.paymentStatus === PAYMENT_STATUS.PAID &&
+              !selectedAppointment.reviewId && (
+                <Button
+                  size="md"
+                  variant="gradient"
+                  color="indigo"
+                  onClick={() => {
+                    // openConfirmCancelModal.setValue(true);
+                    openFeedbackModal.setValue(true);
+                    // openModalDetail.setValue(false);
+                  }}
+                >
+                  Review
+                </Button>
+              )}
+          </DialogFooter>
+        )}
       </Dialog>
     );
   };
@@ -612,7 +650,8 @@ export default function ClientAppointmentTable() {
                               item.status === APPOINTMENT_STATUS.FINISHED
                             }
                             onClick={() => {
-                              console.log("hi");
+                              setSelectedAppointment(item);
+                              openConfirmCancelModal.setValue(true);
                             }}
                           >
                             <CustomIcon
@@ -668,7 +707,13 @@ export default function ClientAppointmentTable() {
           />
         </CardBody>
       )}
-
+      {
+        <ReasonModal
+          onCloseModal={() => openConfirmCancelModal.setValue(false)}
+          onOpenModal={openConfirmCancelModal}
+          onSubmit={onSubmitCancel}
+        />
+      }
       {renderCreateModal()}
       {renderModalDetail()}
       {renderDoctorNoteModal()}

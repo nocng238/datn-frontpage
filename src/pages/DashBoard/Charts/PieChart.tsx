@@ -60,23 +60,13 @@ export default function PieChart(props: Props) {
         color="transparent"
         className="flex flex-col gap-4 rounded-none md:flex-row md:items-center md:justify-between"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex  gap-4">
           <div className="w-max rounded-lg bg-gray-700 p-5 text-white">
             <CalendarDaysIcon className="h-6 w-6" />
           </div>
-          <div>
-            <Typography variant="h6" color="blue-gray">
-              Appointment Chart
-            </Typography>
-            <Typography
-              variant="small"
-              color="gray"
-              className="max-w-sm font-normal"
-            >
-              Visualize your data in a simple way using the
-              @material-tailwind/react chart plugin.
-            </Typography>
-          </div>
+          <Typography variant="h6" color="blue-gray">
+            Appointment Chart
+          </Typography>
         </div>
         <div className="custom-datepicker-input">
           <DatePickerComponent

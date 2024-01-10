@@ -30,9 +30,12 @@ export default function LandingPage() {
                     <div className="text-white text-4xl hover:text-indigo-400">
                       About
                     </div>
-                    <div className="text-white text-4xl hover:text-indigo-400 whitespace-nowrap">
+                    <a
+                      className="text-white text-4xl hover:text-indigo-400 whitespace-nowrap"
+                      href="http://localhost:3000/admin"
+                    >
                       Contact
-                    </div>
+                    </a>
                     <NavLink
                       className="text-white text-4xl bg-amber-300 p-3 rounded-2xl hover:text-indigo-400 hover:bg-amber-600 "
                       to={"/auth/login"}
@@ -233,7 +236,7 @@ export default function LandingPage() {
             <div className="flex flex-col items-stretch w-[47%] max-md:w-full max-md:ml-0">
               <div className="flex flex-col mt-1.5 pb-5 px-5 items-start max-md:max-w-full">
                 <div className="text-teal-400 text-9xl font-bold leading-[140px] tracking-tight self-stretch whitespace-nowrap max-md:max-w-full max-md:text-4xl max-md:leading-[50px]">
-                  Grooming
+                  Pet Heath
                 </div>
                 <div className="overflow-hidden text-zinc-900 text-ellipsis whitespace-nowrap text-4xl font-light leading-[58px] tracking-tight self-stretch mt-16 max-md:max-w-full max-md:mt-10">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -245,7 +248,7 @@ export default function LandingPage() {
                 <div className="bg-black flex items-stretch justify-between gap-5 mt-24 px-20 py-10 rounded-[67px] max-md:max-w-full max-md:flex-wrap max-md:mt-10 max-md:px-5">
                   <MagnifyingGlassIcon className="aspect-square object-contain object-center w-9 stroke-[1] stroke-white overflow-hidden shrink-0 max-w-full" />
                   <NavLink
-                    to={"/public/doctor"}
+                    to={"/public/doctors"}
                     className="text-white uppercase text-4xl leading-4 tracking-wide self-center grow whitespace-nowrap my-auto"
                   >
                     Find doctors now
@@ -575,7 +578,7 @@ export default function LandingPage() {
               </div>
               <div className="bg-gray-200 flex mt-0 items-center justify-between gap-5 pl-10 rounded-3xl max-md:max-w-full max-md:flex-wrap max-md:pl-5">
                 <div className="text-neutral-500 text-3xl font-light grow whitespace-nowrap my-auto">
-                  PetCare@email.com
+                  petcaren.noreply@gmail.com
                 </div>
                 <div className="bg-purple-500 self-stretch flex grow basis-[0%] flex-col justify-center items-center px-16 py-9 rounded-3xl max-md:px-5">
                   <img
@@ -738,7 +741,7 @@ export default function LandingPage() {
                       +84935 612 849
                     </span>
                     <span className="block mt-2 text-sm text-gray-600 dark:text-gray-400 hover:underline">
-                      nmtngoc238@gmail.com
+                      petcaren.noreply@gmail.com
                     </span>
                   </div>
                 </div>
@@ -754,76 +757,6 @@ export default function LandingPage() {
             </div>
           </div>
         </footer>
-        {/* <div className="self-stretch flex flex-col items-center mt-96 pt-12 px-16 max-md:max-w-full max-md:mt-10 max-md:px-5">
-          <div className="z-[1] flex w-full flex-col items-stretch mt-16 max-md:max-w-full max-md:mt-10">
-            <div className="flex w-full justify-between gap-5 items-start max-md:max-w-full max-md:flex-wrap">
-              <div className="text-5xl font-bold uppercase bg-clip-text bg-[linear-gradient(81deg,#FFC73B_0%,#FFBCBC_53.29%,#DDA5FF_102.74%)] grow whitespace-nowrap max-md:text-4xl">
-                PetCare
-              </div>
-              <div className="mt-1.5 max-md:max-w-full">
-                <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
-                  <div className="flex flex-col items-stretch w-[41%] max-md:w-full max-md:ml-0">
-                    <div className="justify-center items-stretch flex grow flex-col max-md:mt-10">
-                      <div className="text-black text-2xl font-bold capitalize whitespace-nowrap">
-                        PetCare
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Service
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Shop
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        About
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize z-[1] whitespace-nowrap mt-8">
-                        Contact
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-stretch w-[41%] ml-5 max-md:w-full max-md:ml-0">
-                    <div className="items-stretch flex grow flex-col pr-2.5 pb-12 max-md:mt-10">
-                      <div className="text-black text-2xl font-bold capitalize whitespace-nowrap">
-                        Cafe
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Food
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Drink
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8 mb-3">
-                        Snacks
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-stretch w-[18%] ml-5 max-md:w-full max-md:ml-0">
-                    <div className="justify-center items-stretch flex grow flex-col max-md:mt-10">
-                      <div className="text-black text-2xl font-bold capitalize whitespace-nowrap">
-                        Follow us
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Twitter
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Instagram
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mt-8">
-                        Facebook
-                      </div>
-                      <div className="text-neutral-400 text-2xl capitalize z-[1] whitespace-nowrap mt-8">
-                        Dribbble
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="text-neutral-400 text-2xl capitalize whitespace-nowrap mr-44 mt-28 self-end max-md:mr-2.5 max-md:mt-10">
-              © 2023 PetCare
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );
