@@ -174,7 +174,7 @@ const DoctorModal = (props: DoctorModalProps) => {
               Happy pets
             </Typography>
             <Typography color="blue-gray" className="font-medium">
-              553,031
+              {doctorDetail.reviews.length}
             </Typography>
           </div>
         </div>

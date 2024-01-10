@@ -287,9 +287,11 @@ export default function ClientAppointmentTable() {
           />
           {/*  */}
         </DialogBody>
-        {[APPOINTMENT_STATUS.PENDING, APPOINTMENT_STATUS.APPROVED].includes(
-          selectedAppointment.status
-        ) && (
+        {[
+          APPOINTMENT_STATUS.PENDING,
+          APPOINTMENT_STATUS.APPROVED,
+          APPOINTMENT_STATUS.FINISHED,
+        ].includes(selectedAppointment.status) && (
           <DialogFooter className="flex items-center justify-center gap-10">
             {compareDate(
               today.toLocaleString(),
@@ -443,8 +445,14 @@ export default function ClientAppointmentTable() {
 
   const handleSubmitFeedback = (feedback: string, rating: number) => {
     if (!selectedAppointment) return;
+    const appointmentIndex = appointments.findIndex(
+      (item) => item.id === selectedAppointment.id
+    );
+    if (appointmentIndex === -1) return;
     sendFeedbackMiddleware(selectedAppointment.id, feedback, rating)
-      .then((res) => {
+      .then((_res) => {
+        appointments[appointmentIndex].reviewId = "randomReviewId";
+        setAppointments([...appointments]);
         getAppointmentList();
         toast(<LabelNotification type="success" message="Success" />);
       })
