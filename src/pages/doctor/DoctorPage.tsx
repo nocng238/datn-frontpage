@@ -28,8 +28,8 @@ const DoctorPage = () => {
   }, [district, ward, city]);
 
   const getDoctorFilter = () => {
-    const address = `${ward ? ward.name + "," : ""}${
-      district ? district.name + "," : ""
+    const address = `${ward ? ward.name + ", " : ""}${
+      district ? district.name + ", " : ""
     }${city ? city.name : ""}`;
     const filter: DoctorFilter = {
       search: search.value,

@@ -56,7 +56,7 @@ import {
 import { toast } from "react-toastify";
 import LabelNotification from "@app/components/Notification/LabelNotification";
 import { MESSAGE } from "@app/constants/message";
-import { formatDate } from "@app/helpers/utils";
+import { compareDate, formatDate } from "@app/helpers/utils";
 import AppoinmentStatusLable from "@app/components/StatusLable/AppointmentStatusLable";
 import FeedbackModal from "./Modal/FeedbackModal";
 import ScheduleEmpty from "@app/components/EmptyState/NoAppointment";
@@ -87,6 +87,8 @@ export default function ClientAppointmentTable() {
   const openDoctorNote = useBoolean();
   const { setPagination, currentPage, maxPage, pageNumberLimit } =
     usePagination();
+  const today = new Date();
+
   useEffect(() => {
     getAppointmentList();
   }, [currentPage.value]);
@@ -289,7 +291,10 @@ export default function ClientAppointmentTable() {
           selectedAppointment.status
         ) && (
           <DialogFooter className="flex items-center justify-center gap-10">
-            {
+            {compareDate(
+              today.toLocaleString(),
+              selectedAppointment.startTime
+            ) > 0 && (
               <Button
                 size="md"
                 variant="gradient"
@@ -300,7 +305,7 @@ export default function ClientAppointmentTable() {
               >
                 Cancel
               </Button>
-            }
+            )}
             {selectedAppointment.status === APPOINTMENT_STATUS.FINISHED &&
               selectedAppointment.paymentStatus === PAYMENT_STATUS.UNPAID && (
                 <Button
@@ -637,7 +642,10 @@ export default function ClientAppointmentTable() {
                         <Tooltip content="Doctor note">
                           <IconButton
                             variant="text"
-                            onClick={() => openDoctorNote.setValue(true)}
+                            onClick={() => {
+                              setSelectedAppointment(item);
+                              openDoctorNote.setValue(true);
+                            }}
                           >
                             <CustomIcon src={NoteIcon} />
                           </IconButton>
@@ -647,7 +655,11 @@ export default function ClientAppointmentTable() {
                             variant="text"
                             disabled={
                               item.status === APPOINTMENT_STATUS.CANCEL ||
-                              item.status === APPOINTMENT_STATUS.FINISHED
+                              item.status === APPOINTMENT_STATUS.FINISHED ||
+                              compareDate(
+                                today.toLocaleString(),
+                                item.startTime
+                              ) < 0
                             }
                             onClick={() => {
                               setSelectedAppointment(item);
