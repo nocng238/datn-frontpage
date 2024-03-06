@@ -44,26 +44,29 @@ export default function LandingPage() {
                     </NavLink>
                   </div>
                 </div>
+                <div className='flex items-end justify-between'>
                 <div
-                  className="text-red-600 text-8xl leading-[159px] tracking-tight items-start self-center max-w-full mt-11 max-md:text-4xl max-md:leading-10 max-md:mt-10 font-black-han-sans mr-[800px]"
+                  className="text-red-600 text-8xl leading-[159px] tracking-tight items-start self-center max-w-full mt-11 max-md:text-4xl max-md:leading-10 max-md:mt-10 font-black-han-sans"
                   style={{
                     // fontFamily: "Black Han Sans",
                     textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25);",
                   }}
                 >
                   <span className="text-white">
-                    We Care about your <br />
+                    We Care about your 
                     pet
                     <br />
-                    the same{" "}
+                    the same<br/>
                   </span>
                   <span className="text-red-600">way as you</span>
                 </div>
                 <img
                   loading="lazy"
                   srcSet="https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/56f02de3d77141403e58cfe1cfe8bd3e076c1bb0a277ea959b859a9603e89eb1?apiKey=d1f90749406b400da2bb63e5353ca29d&"
-                  className="absolute left-[900px] top-[300px] object-cover object-center inset-0 w-3/6"
+                  className=" object-cover object-center inset-0 w-2/3 overflow-hidden"
                 />
+                </div>
+                
               </div>
             </div>
             <div className="absolute flex flex-col items-stretch w-3/12 ml-5 max-md:w-full max-md:ml-0 right-0">
@@ -573,7 +576,7 @@ export default function LandingPage() {
                 <img
                   loading="lazy"
                   srcSet="https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/d1690fc91f330377935d686c4b7aca4f57a462923c7e1213a0d9d44201bf84fb?apiKey=d1f90749406b400da2bb63e5353ca29d&"
-                  className="aspect-[0.84] object-contain object-center w-[200px] overflow-hidden max-w-full mt-8 self-start"
+                  className="aspect-[0.84] object-contain object-center w-[200px] overflow-hidden max-w-full mt-8"
                 />
               </div>
               <div className="bg-gray-200 flex mt-0 items-center justify-between gap-5 pl-10 rounded-3xl max-md:max-w-full max-md:flex-wrap max-md:pl-5">
