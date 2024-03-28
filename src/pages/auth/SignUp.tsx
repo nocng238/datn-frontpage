@@ -21,8 +21,8 @@ export default function SignUp() {
   const [type, setType] = useState("client");
 
   return (
-    <Tabs value={type} className="overflow-visible" key={"payment"}>
-      <TabsHeader className="relative z-0 w-full px-4">
+    <Tabs value={type} className="overflow-auto max-h-[calc(100vh-6rem)]">
+      <TabsHeader className="z-0 w-full px-4">
         <Tab value="client" onClick={() => setType("client")}>
           <div className="flex gap-2 py-[2px] items-center">
             <UserCircleIcon className="w-5 h-5" />
@@ -37,7 +37,7 @@ export default function SignUp() {
         </Tab>
       </TabsHeader>
       <TabsBody
-        className="!overflow-x-hidden !overflow-y-visible"
+        className="!overflow-x-hidden"
         animate={{
           initial: {
             x: type === "client" ? 400 : -400,
@@ -50,7 +50,7 @@ export default function SignUp() {
           },
         }}
       >
-        <TabPanel value={"client"}>
+        <TabPanel value={"client"} className="overflow-hidden">
           <ClientSignUp />
         </TabPanel>
         <TabPanel value={"doctor"}>

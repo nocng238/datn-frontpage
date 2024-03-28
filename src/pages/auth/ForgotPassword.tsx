@@ -51,7 +51,7 @@ export default function ForgotPassword() {
   };
   return (
     <Card className="w-96 bg-opacity-70">
-      <CardHeader
+      <CardHeader 
         variant="gradient"
         color="blue-gray"
         className="mb-4 grid h-28 place-items-center"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Cards from "react-credit-cards";
-import "react-credit-cards/es/styles-compiled.css";
+// import Cards from "react-credit-cards";
+// import "react-credit-cards/es/styles-compiled.css";
 import { CreditCardProps, defaultCreditCard } from "./types";
 import { Button, Card, Dialog, Typography } from "@material-tailwind/react";
 import { useBoolean } from "@app/helpers/hooks";

@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 const AuthLayoutFallback = () => {
   return (
     <div
-      className="flex flex-col items-center justify-between bg-no-repeat bg-cover bg bg-bottom min-h-screen min-w-full"
+      className="flex flex-col items-center justify-between bg-no-repeat bg-cover bg bg-bottom h-screen min-w-full"
       style={{
         backgroundImage: `url(${background})`,
       }}

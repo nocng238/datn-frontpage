@@ -33,7 +33,7 @@ export default function ClientSignUp() {
       });
   };
   return (
-    <Card shadow={false} className="p-4 bg-opacity-70" key={"ClientSignUp"}>
+    <Card shadow={false} className="p-4 bg-opacity-70 max-h-full" key={"ClientSignUp"}>
       <Typography variant="h4" color="blue-gray">
         Sign Up
       </Typography>
@@ -90,7 +90,7 @@ export default function ClientSignUp() {
             <PasswordHelperTooltip />
           </div>
 
-          <div>
+          <div className="">
             <InputDefault
               type="password"
               size="lg"
